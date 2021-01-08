@@ -1,7 +1,7 @@
 # Temporal docker-compose files
 
 With provided docker-compose files you can run a local version of Temporal server with dependencies.
-Try our [Go](https://github.com/temporalio/samples-go) and [Java](https://github.com/temporalio/java-go) samples to see it in action.
+Try our [Go](https://github.com/temporalio/samples-go) and [Java](https://github.com/temporalio/samples-java) samples to see it in action.
 
 ## Installing prerequisites
 
@@ -74,7 +74,7 @@ $ docker-compose -f docker-compose-mysql-es.yml up
 In a typical production setting, dependencies (such as `cassandra` or `elasticsearch`) are managed/started independently of the Temporal server.
 To use the container in a production setting, use the following command:
 
-```bash
+```plain
 $ docker run -e CASSANDRA_SEEDS=10.x.x.x                -- csv of cassandra server ipaddrs
     -e KEYSPACE=<keyspace>                              -- Cassandra keyspace
     -e VISIBILITY_KEYSPACE=<visibility_keyspace>        -- Cassandra visibility keyspace
