@@ -1,0 +1,50 @@
+version: "3.5"
+services:
+  cassandra:
+    container_name: temporal-cassandra
+    image: cassandra:3.11
+    networks:
+      - temporal-network
+    ports:
+      - 9042:9042
+  temporal:
+    container_name: temporal
+    depends_on:
+      - cassandra
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+    image: temporalio/auto-setup:1.5.1
+    networks:
+      - temporal-network
+    ports:
+      - 7233:7233
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:1.5.1
+    networks:
+      - temporal-network
+    stdin_open: true
+    tty: true
+  temporal-web:
+    container_name: temporal-web
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+      - TEMPORAL_PERMIT_WRITE_API=true
+    image: temporalio/web:1.4.1
+    networks:
+      - temporal-network
+    ports:
+      - 8088:8088
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network

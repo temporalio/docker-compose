@@ -1,0 +1,86 @@
+version: "3.5"
+services:
+  cassandra:
+    container_name: temporal-cassandra
+    image: cassandra:3.11
+    ports:
+      - 9042:9042
+    networks:
+      - temporal-network
+  elasticsearch:
+    container_name: temporal-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms100m -Xmx100m
+    image: elasticsearch:7.10.1
+    ports:
+      - 9200:9200
+    networks:
+      - temporal-network
+  kafka:
+    container_name: temporal-kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    image: wurstmeister/kafka:2.12-2.1.1
+    ports:
+      - 9092:9092
+    networks:
+      - temporal-network
+  temporal:
+    container_name: temporal
+    depends_on:
+      - cassandra
+      - kafka
+      - elasticsearch
+    environment:
+      - CASSANDRA_SEEDS=cassandra
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_es.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - KAFKA_SEEDS=kafka
+    image: temporalio/auto-setup:1.5.1
+    ports:
+      - 7233:7233
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:1.5.1
+    stdin_open: true
+    tty: true
+    networks:
+      - temporal-network
+  temporal-web:
+    container_name: temporal-web
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+      - TEMPORAL_PERMIT_WRITE_API=true
+    image: temporalio/web:1.4.1
+    ports:
+      - 8088:8088
+    networks:
+      - temporal-network
+  zookeeper:
+    container_name: temporal-zookeper
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - 2181:2181
+    networks:
+      - temporal-network
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network
