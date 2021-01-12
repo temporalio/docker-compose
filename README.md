@@ -36,6 +36,7 @@ $ tctl --ns test-namespace namespace register -rd 1
 Clone main Temporal repo: [https://github.com/temporalio/temporal](https://github.com/temporalio/temporal):
 ```bash
 $ git clone https://github.com/temporalio/temporal.git
+$ cd temporal
 ```
 
 Replace **YOUR_TAG** and **YOUR_COMMIT** in the below command and build custom docker image of Temporal server:
