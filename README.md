@@ -24,7 +24,7 @@ $ docker-compose up
 View Temporal Web UI at [http://localhost:8088](http://localhost:8088).
 Use preconfigured Temporal CLI tool (`tctl`) from `temporal-admin-tools`:
 ```bash
-$ alias tctl="docker-compose exec temporal-admin-tools tctl"
+$ alias tctl="docker exec temporal-admin-tools tctl"
 ```
 For example to register new namespace `test-namespace` with 1 retention day:
 ```bash
