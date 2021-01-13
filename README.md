@@ -12,7 +12,7 @@ To use these files, you must first have the following installed:
 
 ## How to use
 
-The following steps will run a local instance of the Temporal Server using the default configuration file:
+The following steps will run a local instance of the Temporal Server using the default configuration file ():
 
 1. Clone this repository.
 2. Change directory into the root of the project.
@@ -37,6 +37,9 @@ The following is an example of how to register a new namespace `test-namespace` 
 ```bash
 tctl --ns test-namespace namespace register -rd 1
 ```
+
+Get started building Workflows with a [Go sample](https://github.com/temporalio/samples-go), [Java sample](https://github.com/temporalio/samples-java), or write your own using one of the [SDKs](https://docs.temporal.io/docs/sdks-introduction).
+
 ### Other configuration files
 
 The default configuration file (`docker-compose.yml`) uses a Cassandra database and exposes the Temporal gRPC Frontend on port 7233.
