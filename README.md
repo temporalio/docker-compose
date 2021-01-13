@@ -1,58 +1,53 @@
-# Temporal docker-compose files
+# Temporal Server docker-compose files
 
-With provided docker-compose files you can run a local version of Temporal server with dependencies.
-Try our [Go](https://github.com/temporalio/samples-go) and [Java](https://github.com/temporalio/samples-java) samples to see it in action.
+This repository provides docker-compose files that enable you to run a local instance of the Temporal Server.
+There are a variety of docker-compose files, each utilizing a different set of dependencies.
+Every release of the Temporal Server has a corresponding docker-compose release.
 
-## Installing prerequisites
+## Prerequisites
 
-Install:
-  * [docker](https://docs.docker.com/engine/installation/)
+To use these files, you must first have the following installed:
+  * [Docker](https://docs.docker.com/engine/installation/)
   * [docker-compose](https://docs.docker.com/compose/install/)
 
-## Default configuration
+## How to use
 
-With every release of the Temporal server, there is also a corresponding
-docker hub image .
+The following steps will run a local instance of the Temporal Server using the default configuration file:
 
-The following step will bring up a docker container that is running the Temporal server
-and its dependencies (cassandra). The Temporal gRPC frontend is exposed on port `7233`.
+1. Clone this repository.
+2. Change directory into the root of the project.
+3. Run the `docker-compose up` command.
 
 ```bash
-$ docker-compose up
+git clone https://github.com/temporalio/docker-compose.git
+cd  docker-compose
+docker-compose up
 ```
 
-View Temporal Web UI at [http://localhost:8088](http://localhost:8088).
-Use preconfigured Temporal CLI tool (`tctl`) from `temporal-admin-tools`:
+After the Server has started, you can open the Temporal Web UI in your browser: [http://localhost:8088](http://localhost:8088).
+
+You can also interact with the Server using a preconfigured CLI (tctl).
+First create an alias for `tctl`:
+
 ```bash
-$ alias tctl="docker exec temporal-admin-tools tctl"
+alias tctl="docker-compose exec temporal-admin-tools tctl"
 ```
-For example to register new namespace `test-namespace` with 1 retention day:
+
+The following is an example of how to register a new namespace `test-namespace` with 1 day of retention:
 ```bash
-$ tctl --ns test-namespace namespace register -rd 1
+tctl --ns test-namespace namespace register -rd 1
 ```
+### Other configuration files
 
-## Custom image configuration
+The default configuration file (`docker-compose.yml`) uses a Cassandra database and exposes the Temporal gRPC Frontend on port 7233.
+The other configuration files in the repo spin up instances of the Temporal Server using different databases and dependencies.
+For example you can run the Temporal Server with MySQL and Elastic Search with this command:
 
-Clone main Temporal repo: [https://github.com/temporalio/temporal](https://github.com/temporalio/temporal):
 ```bash
-$ git clone https://github.com/temporalio/temporal.git
-$ cd temporal
+docker-compose -f docker-compose-mysql-es.yml up
 ```
 
-Replace **YOUR_TAG** and **YOUR_COMMIT** in the below command and build custom docker image of Temporal server:
-```bash
-$ git checkout YOUR_COMMIT
-$ docker build . -t temporalio/auto-setup:YOUR_TAG --build-arg TARGET=auto-setup
-```
-Replace the tag of **image: temporalio/auto-setup** to **YOUR_TAG** in `docker-compose.yml`.
-Then start the service using the below commands:
-```bash
-$ docker-compose up
-```
-
-## Other storage configurations
-
-Default `docker-compose.yml` file runs Temporal server with Cassandra. There are other configuration files:
+Here is a list of available files and the dependencies they use.
 
 | File                         | Description |
 |------------------------------|-------------|
@@ -63,20 +58,38 @@ Default `docker-compose.yml` file runs Temporal server with Cassandra. There are
 | docker-compose-postgres.yml  | PostgreSQL |
 | docker-compose-cockroach.yml | CockroachDB |
 
-Use one of the these files to run corresponding Temporal configuration. For example to run Temporal with MySQL
-and Elasticsearch for enhance visibility queries run:
+### Use a custom image configuration
+
+If you want, you can even use a custom Docker image of the Temporal Server.
+
+Clone the main Temporal Server repo: [https://github.com/temporalio/temporal](https://github.com/temporalio/temporal):
 
 ```bash
-$ docker-compose -f docker-compose-mysql-es.yml up
+git clone https://github.com/temporalio/temporal.git
+```
+
+In the following command, replace **<YOUR_TAG>** and **<YOUR_COMMIT>** to build the custom Docker image:
+
+```bash
+git checkout <YOUR_COMMIT>
+docker build . -t temporalio/auto-setup:<YOUR_TAG> --build-arg TARGET=auto-setup
+```
+
+Next, in the `docker-compose.yml` file, replace the `services.temporal.image` configuration value with **<YOUR_TAG>**.
+
+Then run the `docker-compose up` command:
+
+```bash
+docker-compose up
 ```
 
 ## Quickstart for production
 
-In a typical production setting, dependencies (such as `cassandra` or `elasticsearch`) are managed/started independently of the Temporal server.
+In a typical production setting, dependencies such as `cassandra` or `elasticsearch` are managed/started independently of the Temporal server.
 To use the container in a production setting, use the following command:
 
-```plain
-$ docker run -e CASSANDRA_SEEDS=10.x.x.x                -- csv of cassandra server ipaddrs
+```bash
+docker run -e CASSANDRA_SEEDS=10.x.x.x                -- csv of cassandra server ipaddrs
     -e KEYSPACE=<keyspace>                              -- Cassandra keyspace
     -e VISIBILITY_KEYSPACE=<visibility_keyspace>        -- Cassandra visibility keyspace
     -e SKIP_SCHEMA_SETUP=true                           -- do not setup cassandra schema during startup
