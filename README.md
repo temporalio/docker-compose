@@ -12,7 +12,7 @@ To use these files, you must first have the following installed:
 
 ## How to use
 
-The following steps will run a local instance of the Temporal Server using the default configuration file ():
+The following steps will run a local instance of the Temporal Server using the default configuration file (`docker-compose.yml`):
 
 1. Clone this repository.
 2. Change directory into the root of the project.
@@ -30,7 +30,7 @@ You can also interact with the Server using a preconfigured CLI (tctl).
 First create an alias for `tctl`:
 
 ```bash
-alias tctl="docker-compose exec temporal-admin-tools tctl"
+alias tctl="docker exec temporal-admin-tools tctl"
 ```
 
 The following is an example of how to register a new namespace `test-namespace` with 1 day of retention:
@@ -91,14 +91,14 @@ docker-compose up
 In a typical production setting, dependencies such as `cassandra` or `elasticsearch` are managed/started independently of the Temporal server.
 To use the container in a production setting, use the following command:
 
-```bash
-docker run -e CASSANDRA_SEEDS=10.x.x.x                -- csv of cassandra server ipaddrs
+```plain
+docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra server ipaddrs
     -e KEYSPACE=<keyspace>                              -- Cassandra keyspace
     -e VISIBILITY_KEYSPACE=<visibility_keyspace>        -- Cassandra visibility keyspace
-    -e SKIP_SCHEMA_SETUP=true                           -- do not setup cassandra schema during startup
+    -e SKIP_SCHEMA_SETUP=true                           -- do not setup Cassandra schema during startup
     -e RINGPOP_SEEDS=10.x.x.x,10.x.x.x  \               -- csv of ipaddrs for gossip bootstrap
     -e NUM_HISTORY_SHARDS=1024  \                       -- Number of history shards
-    -e SERVICES=history,matching \                      -- Spinup only the provided services
+    -e SERVICES=history,matching \                      -- Spin-up only the provided services
     -e LOG_LEVEL=debug,info \                           -- Logging level
     -e DYNAMIC_CONFIG_FILE_PATH=config/foo.yaml         -- Dynamic config file to be watched
     temporalio/server:<tag>
