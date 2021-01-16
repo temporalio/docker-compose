@@ -10,5 +10,5 @@ $ make release SERVER_TAG=<current_release_server_tag> WEB_TAG=<current_release_
 For example:
 
 ```bash
-$ make release SERVER_TAG=1.5.1 WEB_TAG=1.4.1
+$ make release SERVER_TAG=1.5.1 WEB_TAG=1.5.0
 ```
