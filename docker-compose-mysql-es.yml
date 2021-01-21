@@ -6,10 +6,10 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms100m -Xmx100m
     image: elasticsearch:7.10.1
-    ports:
-      - 9200:9200
     networks:
       - temporal-network
+    ports:
+      - 9200:9200
   kafka:
     container_name: temporal-kafka
     depends_on:
@@ -19,19 +19,19 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     image: wurstmeister/kafka:2.12-2.1.1
-    ports:
-      - 9092:9092
     networks:
       - temporal-network
+    ports:
+      - 9092:9092
   mysql:
     container_name: temporal-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
     image: mysql:5.7
-    ports:
-      - 3306:3306
     networks:
       - temporal-network
+    ports:
+      - 3306:3306
   temporal:
     container_name: temporal
     depends_on:
@@ -48,24 +48,24 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - KAFKA_SEEDS=kafka
-    image: temporalio/auto-setup:1.5.1
+    image: temporalio/auto-setup:1.6.0
+    networks:
+      - temporal-network
     ports:
       - 7233:7233
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
-    networks:
-      - temporal-network
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.5.1
-    stdin_open: true
-    tty: true
+    image: temporalio/admin-tools:1.6.0
     networks:
       - temporal-network
+    stdin_open: true
+    tty: true
   temporal-web:
     container_name: temporal-web
     depends_on:
@@ -73,17 +73,17 @@ services:
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
     image: temporalio/web:1.5.0
-    ports:
-      - 8088:8088
     networks:
       - temporal-network
+    ports:
+      - 8088:8088
   zookeeper:
     container_name: temporal-zookeeper
     image: wurstmeister/zookeeper:3.4.6
-    ports:
-      - 2181:2181
     networks:
       - temporal-network
+    ports:
+      - 2181:2181
 networks:
   temporal-network:
     driver: bridge

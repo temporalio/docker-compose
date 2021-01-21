@@ -6,10 +6,10 @@ services:
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
     image: postgres:9.6
-    ports:
-      - 5432:5432
     networks:
       - temporal-network
+    ports:
+      - 5432:5432
   temporal:
     container_name: temporal
     depends_on:
@@ -21,24 +21,24 @@ services:
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    image: temporalio/auto-setup:1.5.1
+    image: temporalio/auto-setup:1.6.0
+    networks:
+      - temporal-network
     ports:
       - 7233:7233
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
-    networks:
-      - temporal-network
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.5.1
-    stdin_open: true
-    tty: true
+    image: temporalio/admin-tools:1.6.0
     networks:
       - temporal-network
+    stdin_open: true
+    tty: true
   temporal-web:
     container_name: temporal-web
     depends_on:
@@ -47,10 +47,10 @@ services:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
       - TEMPORAL_PERMIT_WRITE_API=true
     image: temporalio/web:1.5.0
-    ports:
-      - 8088:8088
     networks:
       - temporal-network
+    ports:
+      - 8088:8088
 networks:
   temporal-network:
     driver: bridge
