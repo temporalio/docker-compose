@@ -17,7 +17,7 @@ import (
 func main() {
 	var root, fileRegex string
 	flag.StringVar(&root, "root", ".", "root to scan")
-	flag.StringVar(&fileRegex, "file-regex", `docker-compose.*\.(?:y|ya)ml`, "file prefix to process")
+	flag.StringVar(&fileRegex, "file-regex", `docker-compose.*\.ya?ml`, "file prefix to process")
 	var serverTag, webTag string
 	flag.StringVar(&serverTag, "server-tag", "", "server images tag to set")
 	flag.StringVar(&webTag, "web-tag", "", "web image tag to set")
