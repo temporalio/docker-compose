@@ -26,7 +26,7 @@ services:
       - POSTGRES_PWD=
       - POSTGRES_SEEDS=postgres
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    image: temporalio/auto-setup:1.6.3
+    image: temporalio/auto-setup:1.6.4
     links:
       - cockroach:postgres
     networks:
@@ -41,7 +41,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.6.3
+    image: temporalio/admin-tools:1.6.4
     networks:
       - temporal-network
     stdin_open: true
