@@ -17,24 +17,10 @@ services:
       - temporal-network
     ports:
       - 9200:9200
-  kafka:
-    container_name: temporal-kafka
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    image: wurstmeister/kafka:2.12-2.1.1
-    networks:
-      - temporal-network
-    ports:
-      - 9092:9092
   temporal:
     container_name: temporal
     depends_on:
       - cassandra
-      - kafka
       - elasticsearch
     environment:
       - CASSANDRA_SEEDS=cassandra
@@ -42,7 +28,6 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-      - KAFKA_SEEDS=kafka
     image: temporalio/auto-setup:1.7.0
     networks:
       - temporal-network
@@ -73,13 +58,6 @@ services:
       - temporal-network
     ports:
       - 8088:8088
-  zookeeper:
-    container_name: temporal-zookeper
-    image: wurstmeister/zookeeper:3.4.6
-    networks:
-      - temporal-network
-    ports:
-      - 2181:2181
 networks:
   temporal-network:
     driver: bridge
