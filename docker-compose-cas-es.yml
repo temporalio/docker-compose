@@ -2,7 +2,7 @@ version: "3.5"
 services:
   cassandra:
     container_name: temporal-cassandra
-    image: cassandra:3.11
+    image: cassandra:3.11.9
     networks:
       - temporal-network
     ports:
