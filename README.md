@@ -40,7 +40,7 @@ tctl --ns test-namespace namespace register -rd 1
 
 Get started building Workflows with a [Go sample](https://github.com/temporalio/samples-go), [Java sample](https://github.com/temporalio/samples-java), or write your own using one of the [SDKs](https://docs.temporal.io/docs/sdks-introduction).
 
-> Note for running this `docker-compose` on M1 Apple Silicon: you may run into a `no matching manifest for linux/arm64/v8 in the manifest list entries` error. To resolve this, [specify the platform](https://stackoverflow.com/questions/65456814/docker-apple-silicon-m1-preview-mysql-no-matching-manifest-for-linux-arm64-v8) for the Cassandra container.
+> Note for running this `docker-compose` on M1 Apple Silicon: you may run into a `no matching manifest for linux/arm64/v8 in the manifest list entries` error. This is a temporary outcome of the Cassandra Docker image [not publishing ARM builds](https://github.com/docker-library/cassandra/issues/222). For the time being, pin the version to Cassandra `v3.11.9` instead of just `3.11`.
 
 ### Other configuration files
 
