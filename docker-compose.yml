@@ -14,7 +14,7 @@ services:
     environment:
       - CASSANDRA_SEEDS=cassandra
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    image: temporaliotest/auto-setup:1.8.0
+    image: temporalio/auto-setup:1.8.0
     networks:
       - temporal-network
     ports:
