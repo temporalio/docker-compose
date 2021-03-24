@@ -96,7 +96,6 @@ docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra serv
     -e KEYSPACE=<keyspace>                              -- Cassandra keyspace
     -e VISIBILITY_KEYSPACE=<visibility_keyspace>        -- Cassandra visibility keyspace
     -e SKIP_SCHEMA_SETUP=true                           -- do not setup Cassandra schema during startup
-    -e RINGPOP_SEEDS=10.x.x.x,10.x.x.x  \               -- csv of ipaddrs for gossip bootstrap
     -e NUM_HISTORY_SHARDS=1024  \                       -- Number of history shards
     -e SERVICES=history,matching \                      -- Spin-up only the provided services
     -e LOG_LEVEL=debug,info \                           -- Logging level
