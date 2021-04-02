@@ -53,7 +53,7 @@ services:
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
       - TEMPORAL_PERMIT_WRITE_API=true
-    image: temporalio/web:1.7.1
+    image: temporalio/web:1.8.0
     networks:
       - temporal-network
     ports:
