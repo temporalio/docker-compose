@@ -33,7 +33,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.8.2
+    image: temporalio/auto-setup:1.9.0
     networks:
       - temporal-network
     ports:
@@ -46,7 +46,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.8.2
+    image: temporalio/admin-tools:1.9.0
     networks:
       - temporal-network
     stdin_open: true
