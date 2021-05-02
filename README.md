@@ -52,14 +52,15 @@ docker-compose -f docker-compose-mysql-es.yml up
 
 Here is a list of available files and the dependencies they use.
 
-| File                         | Description |
-|------------------------------|-------------|
-| docker-compose.yml           | Cassandra (default) |
-| docker-compose-cas-es.yml    | Cassandra and Elasticsearch |
-| docker-compose-mysql.yml     | MySQL |
-| docker-compose-mysql-es.yml  | MySQL and Elasticsearch |
-| docker-compose-postgres.yml  | PostgreSQL |
-| docker-compose-cockroach.yml | CockroachDB |
+| File                            | Description |
+|---------------------------------|-------------|
+| docker-compose.yml              | Cassandra (default) |
+| docker-compose-cas-es.yml       | Cassandra and Elasticsearch |
+| docker-compose-mysql.yml        | MySQL |
+| docker-compose-mysql-es.yml     | MySQL and Elasticsearch |
+| docker-compose-postgres.yml     | PostgreSQL |
+| docker-compose-cockroach.yml    | CockroachDB |
+| docker-compose-cockroach-es.yml | CockroachDB and Elasticsearch |
 
 ### Use a custom image configuration
 
