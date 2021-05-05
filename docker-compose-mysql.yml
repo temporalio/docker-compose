@@ -20,7 +20,7 @@ services:
       - MYSQL_PWD=root
       - MYSQL_SEEDS=mysql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    image: temporalio/auto-setup:1.9.0
+    image: temporalio/auto-setup:1.9.1
     networks:
       - temporal-network
     ports:
@@ -33,7 +33,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.9.0
+    image: temporalio/admin-tools:1.9.1
     networks:
       - temporal-network
     stdin_open: true
