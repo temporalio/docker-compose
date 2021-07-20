@@ -1,15 +1,5 @@
 version: "3.5"
 services:
-  elasticsearch:
-    container_name: temporal-elasticsearch
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms100m -Xmx100m
-    image: elasticsearch:7.10.1
-    networks:
-      - temporal-network
-    ports:
-      - 9200:9200
   cockroach:
     cap_drop:
       - ALL
@@ -25,6 +15,16 @@ services:
     security_opt:
       - no-new-privileges
     tty: false
+  elasticsearch:
+    container_name: temporal-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms100m -Xmx100m
+    image: elasticsearch:7.10.1
+    networks:
+      - temporal-network
+    ports:
+      - 9200:9200
   temporal:
     container_name: temporal
     depends_on:
@@ -40,7 +40,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.9.2
+    image: temporalio/auto-setup:1.11.0
     links:
       - cockroach:postgres
     networks:
@@ -55,7 +55,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.9.2
+    image: temporalio/admin-tools:1.11.0
     networks:
       - temporal-network
     stdin_open: true
