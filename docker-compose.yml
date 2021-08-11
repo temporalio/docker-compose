@@ -24,6 +24,7 @@ services:
     container_name: temporal
     depends_on:
       - postgresql
+      - elasticsearch
     environment:
       - DB=postgresql
       - DB_PORT=5432
@@ -31,6 +32,9 @@ services:
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
     image: temporalio/auto-setup:1.11.3
     networks:
       - temporal-network
