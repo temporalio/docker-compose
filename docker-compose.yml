@@ -44,7 +44,6 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-      - TEMPORAL_PERMIT_WRITE_API=true
     image: temporalio/admin-tools:1.11.3
     networks:
       - temporal-network
