@@ -7,8 +7,9 @@ Every major or minor release of the Temporal Server has a corresponding docker-c
 ## Prerequisites
 
 To use these files, you must first have the following installed:
-  * [Docker](https://docs.docker.com/engine/installation/)
-  * [docker-compose](https://docs.docker.com/compose/install/)
+
+- [Docker](https://docs.docker.com/engine/installation/)
+- [docker-compose](https://docs.docker.com/compose/install/)
 
 ## How to use
 
@@ -34,15 +35,18 @@ alias tctl="docker exec temporal-admin-tools tctl"
 ```
 
 The following is an example of how to register a new namespace `test-namespace` with 1 day of retention:
+
 ```bash
 tctl --ns test-namespace namespace register -rd 1
 ```
+
+You can find our `tctl` docs on [docs.temporal.io](https://docs.temporal.io/docs/system-tools/tctl/).
 
 Get started building Workflows with a [Go sample](https://github.com/temporalio/samples-go), [Java sample](https://github.com/temporalio/samples-java), or write your own using one of the [SDKs](https://docs.temporal.io/docs/sdks-introduction).
 
 ### Other configuration files
 
-The default configuration file (`docker-compose.yml`) uses a Cassandra database and exposes the Temporal gRPC Frontend on port 7233.
+The default configuration file (`docker-compose.yml`) uses a PostgreSQL database, an Elasticsearch instance, and exposes the Temporal gRPC Frontend on port 7233.
 The other configuration files in the repo spin up instances of the Temporal Server using different databases and dependencies.
 For example you can run the Temporal Server with MySQL and Elastic Search with this command:
 
@@ -52,15 +56,16 @@ docker-compose -f docker-compose-mysql-es.yml up
 
 Here is a list of available files and the dependencies they use.
 
-| File                            | Description |
-|---------------------------------|-------------|
-| docker-compose.yml              | Cassandra (default) |
-| docker-compose-cas-es.yml       | Cassandra and Elasticsearch |
-| docker-compose-mysql.yml        | MySQL |
-| docker-compose-mysql-es.yml     | MySQL and Elasticsearch |
-| docker-compose-postgres.yml     | PostgreSQL |
-| docker-compose-cockroach.yml    | CockroachDB |
-| docker-compose-cockroach-es.yml | CockroachDB and Elasticsearch |
+| File                            | Description                            |
+| ------------------------------- | -------------------------------------- |
+| docker-compose.yml              | PostgreSQL and Elasticsearch (default) |
+| docker-compose-postgres.yml     | PostgreSQL                             |
+| docker-compose-cassandra.yml    | Cassandra                              |
+| docker-compose-cas-es.yml       | Cassandra and Elasticsearch            |
+| docker-compose-mysql.yml        | MySQL                                  |
+| docker-compose-mysql-es.yml     | MySQL and Elasticsearch                |
+| docker-compose-cockroach.yml    | CockroachDB                            |
+| docker-compose-cockroach-es.yml | CockroachDB and Elasticsearch          |
 
 ### Use a custom image configuration
 
