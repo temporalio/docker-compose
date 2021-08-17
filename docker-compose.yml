@@ -1,19 +1,45 @@
 version: "3.5"
 services:
-  cassandra:
-    container_name: temporal-cassandra
-    image: cassandra:3.11.9
+  postgresql:
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:9.6
     networks:
       - temporal-network
     ports:
-      - 9042:9042
+      - 5432:5432
+  elasticsearch:
+    container_name: temporal-elasticsearch
+    environment:
+      # Set storage limit to low number.
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms100m -Xmx100m
+    image: elasticsearch:7.10.1
+    networks:
+      - temporal-network
+    ports:
+      - 9200:9200
   temporal:
     container_name: temporal
     depends_on:
-      - cassandra
+      - postgresql
+      - elasticsearch
     environment:
-      - CASSANDRA_SEEDS=cassandra
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_es.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
     image: temporalio/auto-setup:1.11.3
     networks:
       - temporal-network
