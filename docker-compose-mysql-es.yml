@@ -1,18 +1,8 @@
 version: "3.5"
 services:
-  mysql:
-    container_name: temporal-mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-    image: mysql:5.7
-    networks:
-      - temporal-network
-    ports:
-      - 3306:3306
   elasticsearch:
     container_name: temporal-elasticsearch
     environment:
-      # Set storage limit to low number.
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
       - cluster.routing.allocation.disk.watermark.high=256mb
@@ -24,6 +14,15 @@ services:
       - temporal-network
     ports:
       - 9200:9200
+  mysql:
+    container_name: temporal-mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    image: mysql:5.7
+    networks:
+      - temporal-network
+    ports:
+      - 3306:3306
   temporal:
     container_name: temporal
     depends_on:
@@ -38,7 +37,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.11.3
+    image: temporalio/auto-setup:1.11.4
     networks:
       - temporal-network
     ports:
@@ -51,7 +50,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.11.3
+    image: temporalio/admin-tools:1.11.4
     networks:
       - temporal-network
     stdin_open: true

@@ -18,7 +18,6 @@ services:
   elasticsearch:
     container_name: temporal-elasticsearch
     environment:
-      # Set storage limit to low number.
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
       - cluster.routing.allocation.disk.watermark.high=256mb
@@ -45,7 +44,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.11.3
+    image: temporalio/auto-setup:1.11.4
     links:
       - cockroach:postgres
     networks:
@@ -60,7 +59,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.11.3
+    image: temporalio/admin-tools:1.11.4
     networks:
       - temporal-network
     stdin_open: true
