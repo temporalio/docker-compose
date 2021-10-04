@@ -21,7 +21,7 @@ services:
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    image: temporalio/auto-setup:1.12.1
+    image: temporalio/auto-setup:1.12.2
     networks:
       - temporal-network
     ports:
@@ -34,7 +34,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.12.1
+    image: temporalio/admin-tools:1.12.2
     networks:
       - temporal-network
     stdin_open: true
