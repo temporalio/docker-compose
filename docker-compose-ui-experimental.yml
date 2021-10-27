@@ -63,7 +63,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-    image: temporalio/ui:latest
+    image: temporaliotest/ui:latest
     networks:
       - temporal-network
     ports:
