@@ -25,6 +25,8 @@ cd  docker-compose
 docker-compose up
 ```
 
+> ⚠️ If you are on an M1 Mac, you need to use Temporal v1.12. `git reset 0e68621 --hard` should get you there. We aim to officially support ARM images soon.
+
 After the Server has started, you can open the Temporal Web UI in your browser: [http://localhost:8088](http://localhost:8088).
 
 You can also interact with the Server using a preconfigured CLI (tctl).
