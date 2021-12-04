@@ -4,7 +4,7 @@ services:
     container_name: temporal-mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
-    image: mysql:5.7
+    image: mysql:8
     networks:
       - temporal-network
     ports:
