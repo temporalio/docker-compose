@@ -19,7 +19,7 @@ services:
     environment:
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
-    image: postgres:9.6
+    image: postgres:13
     networks:
       - temporal-network
     ports:
