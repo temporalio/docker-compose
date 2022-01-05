@@ -110,3 +110,7 @@ docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra serv
     -e DYNAMIC_CONFIG_FILE_PATH=config/foo.yaml         -- Dynamic config file to be watched
     temporalio/server:<tag>
 ```
+
+## Auto-Setup
+
+These docker-compose setups do not use Temporal Server directly - they utilize [an `auto-setup` script you can read about here](https://docs.temporal.io/blog/auto-setup). You will want to familiarize yourself with this before you deploy to production.
