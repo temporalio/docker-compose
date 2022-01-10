@@ -63,7 +63,8 @@ services:
       - temporal
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-    image: temporaliotest/ui:latest
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporaliotest/ui:sha-77656f3
     networks:
       - temporal-network
     ports:
