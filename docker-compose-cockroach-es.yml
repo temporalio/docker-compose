@@ -44,7 +44,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.14.0
+    image: temporalio/auto-setup:1.14.2
     links:
       - cockroach:postgres
     networks:
@@ -59,7 +59,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.14.0
+    image: temporalio/admin-tools:1.14.2
     networks:
       - temporal-network
     stdin_open: true
