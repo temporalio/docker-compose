@@ -58,16 +58,17 @@ docker-compose -f docker-compose-mysql-es.yml up
 
 Here is a list of available files and the dependencies they use.
 
-| File                            | Description                            |
-| ------------------------------- | -------------------------------------- |
-| docker-compose.yml              | PostgreSQL and Elasticsearch (default) |
-| docker-compose-postgres.yml     | PostgreSQL                             |
-| docker-compose-cas.yml          | Cassandra                              |
-| docker-compose-cas-es.yml       | Cassandra and Elasticsearch            |
-| docker-compose-mysql.yml        | MySQL                                  |
-| docker-compose-mysql-es.yml     | MySQL and Elasticsearch                |
-| docker-compose-cockroach.yml    | CockroachDB                            |
-| docker-compose-cockroach-es.yml | CockroachDB and Elasticsearch          |
+| File                               | Description                            |
+| ---------------------------------- | -------------------------------------- |
+| docker-compose.yml                 | PostgreSQL and Elasticsearch (default) |
+| docker-compose-postgres.yml        | PostgreSQL                             |
+| docker-compose-cas.yml             | Cassandra                              |
+| docker-compose-cas-es.yml          | Cassandra and Elasticsearch            |
+| docker-compose-mysql.yml           | MySQL                                  |
+| docker-compose-mysql-es.yml        | MySQL and Elasticsearch                |
+| docker-compose-cockroach.yml       | CockroachDB                            |
+| docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
+| docker-compose-ui-experimental.yml | Web v2 Beta (Experimental)             |
 
 ### Use a custom image configuration
 
@@ -114,3 +115,11 @@ docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra serv
 ## Auto-Setup
 
 These docker-compose setups do not use Temporal Server directly - they utilize [an `auto-setup` script you can read about here](https://docs.temporal.io/blog/auto-setup). You will want to familiarize yourself with this before you deploy to production.
+
+## Using the new, experimental web interface
+
+```bash
+docker-compose -f docker-compose-ui-experimental.yml up
+```
+
+The web interface is located at `http://localhost:8080` by default.
