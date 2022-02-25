@@ -61,7 +61,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
-    image: temporalio/web:1.13.0
+    image: temporalio/web:1.14.0
     networks:
       - temporal-network
     ports:
