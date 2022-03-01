@@ -9,6 +9,7 @@ services:
       - cluster.routing.allocation.disk.watermark.flood_stage=128mb
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms100m -Xmx100m
+      - xpack.security.enabled=false
     image: elasticsearch:7.16.2
     networks:
       - temporal-network
@@ -64,7 +65,7 @@ services:
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
       - TEMPORAL_PERMIT_WRITE_API=true
-    image: temporalio/web:1.13.0
+    image: temporalio/web:1.14.0
     networks:
       - temporal-network
     ports:

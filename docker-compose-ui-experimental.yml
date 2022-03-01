@@ -64,7 +64,7 @@ services:
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
-    image: temporalio/ui:0.2.0
+    image: temporalio/ui:0.3.0
     networks:
       - temporal-network
     ports:
@@ -76,7 +76,7 @@ services:
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
       - TEMPORAL_PERMIT_WRITE_API=true
-    image: temporalio/web:1.13.0
+    image: temporalio/web:1.14.0
     networks:
       - temporal-network
     ports:
