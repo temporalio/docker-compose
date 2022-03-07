@@ -70,6 +70,21 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
 | docker-compose-ui-experimental.yml | Web v2 Beta (Experimental)             |
 
+### Using the new, experimental web interface
+
+```bash
+docker-compose -f docker-compose-ui-experimental.yml up
+```
+
+The web interface is located at `http://localhost:8080` by default.
+
+### Enabling metrics (with Grafana and Prometheus)
+
+We maintain two example docker-compose setups with server metrics enabled, and Prometheus and Grafana with [our Server and SDK dashboards](https://github.com/temporalio/dashboards):
+
+- https://github.com/tsurdilo/my-temporal-dockercompose
+- https://github.com/temporalio/background-checks
+
 ### Use a custom image configuration
 
 If you want, you can even use a custom Docker image of the Temporal Server.
@@ -95,10 +110,13 @@ Then run the `docker-compose up` command:
 docker-compose up
 ```
 
-## Quickstart for production
+## Using Temporal docker images in production
 
-In a typical production setting, dependencies such as `cassandra` or `elasticsearch` are managed/started independently of the Temporal server.
-To use the container in a production setting, use the following command:
+These docker-compose setups listed here do not use Temporal Server directly - they utilize [an `auto-setup` script you can read about here](https://docs.temporal.io/blog/auto-setup). You will want to familiarize yourself with this before you deploy to production.
+
+In a typical production setting, dependencies such as `cassandra` or `elasticsearch` are managed/started independently of the Temporal server. **You should use the `temporalio/server` image instead of `temporalio/auto-setup`.**
+
+To use the `temporalio/server` container in a production setting, use the following command:
 
 ```plain
 docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra server ipaddrs
@@ -112,14 +130,3 @@ docker run -e CASSANDRA_SEEDS=10.x.x.x                  -- csv of Cassandra serv
     temporalio/server:<tag>
 ```
 
-## Auto-Setup
-
-These docker-compose setups do not use Temporal Server directly - they utilize [an `auto-setup` script you can read about here](https://docs.temporal.io/blog/auto-setup). You will want to familiarize yourself with this before you deploy to production.
-
-## Using the new, experimental web interface
-
-```bash
-docker-compose -f docker-compose-ui-experimental.yml up
-```
-
-The web interface is located at `http://localhost:8080` by default.
