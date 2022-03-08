@@ -13,8 +13,8 @@ services:
     image: elasticsearch:7.16.2
     networks:
       - temporal-network
-    ports:
-      - 9200:9200
+    expose:
+      - 9200
   postgresql:
     container_name: temporal-postgresql
     environment:
@@ -23,8 +23,8 @@ services:
     image: postgres:13
     networks:
       - temporal-network
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
   temporal:
     container_name: temporal
     depends_on:
