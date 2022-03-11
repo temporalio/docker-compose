@@ -17,14 +17,9 @@ services:
     tty: false
   elasticsearch:
     container_name: temporal-elasticsearch
-    environment:
-      - cluster.routing.allocation.disk.threshold_enabled=true
-      - cluster.routing.allocation.disk.watermark.low=512mb
-      - cluster.routing.allocation.disk.watermark.high=256mb
-      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms100m -Xmx100m
-    image: elasticsearch:7.16.2
+    env_file:
+      - elasticsearch.env
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
       - temporal-network
     ports:
@@ -40,11 +35,11 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PWD=
       - POSTGRES_SEEDS=postgres
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_es.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql_es.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/auto-setup:1.15.2
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
     links:
       - cockroach:postgres
     networks:
@@ -59,7 +54,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
-    image: temporalio/admin-tools:1.15.2
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
     networks:
       - temporal-network
     stdin_open: true
@@ -70,7 +65,7 @@ services:
       - temporal
     environment:
       - TEMPORAL_GRPC_ENDPOINT=temporal:7233
-    image: temporalio/web:1.14.0
+    image: temporalio/web:${TEMPORAL_WEB_VERSION}
     networks:
       - temporal-network
     ports:
