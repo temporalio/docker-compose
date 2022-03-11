@@ -1,14 +1,13 @@
 Create new release
 ==================
 
-To update image tags in `docker-compose*.yml` files run:
+To update the image tag for a release:
 
-```bash
-$ make release SERVER_TAG=<current_release_server_tag> WEB_TAG=<current_release_web_tag>
-```
+* In the file [.env](./.env) update the version variable to be changed
 
-For example:
-
-```bash
-$ make release SERVER_TAG=1.5.1 WEB_TAG=1.5.0
-```
+    ```
+    TEMPORAL_VERSION=1.15.2
+    TEMPORAL_WEB_VERSION=1.14.0
+    TEMPORAL_UI_VERSION=0.4.0
+    ```
+* Commit the change and submit a PR
