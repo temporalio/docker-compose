@@ -2,8 +2,14 @@ version: "3.5"
 services:
   elasticsearch:
     container_name: temporal-elasticsearch
-    env_file:
-      - elasticsearch.env
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms100m -Xmx100m
+      - xpack.security.enabled=false
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
       - temporal-network
