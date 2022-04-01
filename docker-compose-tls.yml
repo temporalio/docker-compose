@@ -1,0 +1,112 @@
+version: "3.5"
+services:
+  elasticsearch:
+    container_name: temporal-elasticsearch
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms100m -Xmx100m
+      - ELASTIC_PASSWORD=elastic
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/elasticsearch-key.pem
+      - xpack.security.http.ssl.certificate=certs/elasticsearch.pem
+      - xpack.security.http.ssl.certificate_authorities=certs/ca.pem
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/elasticsearch-key.pem
+      - xpack.security.transport.ssl.certificate=certs/elasticsearch.pem
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca.pem
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    networks:
+      - temporal-network
+    expose:
+      - 9200
+    volumes:
+      - ./.pki:/usr/share/elasticsearch/config/certs
+  postgresql:
+    container_name: temporal-postgresql
+    command: 
+      - "-c"
+      - "ssl=on" 
+      - "-c"
+      - "ssl_cert_file=/pki/postgresql.pem"
+      - "-c"
+      - "ssl_key_file=/pki/postgresql-key.pem"
+      - "-c"
+      - "ssl_ca_file=/pki/ca.pem"
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:${POSTGRESQL_VERSION}
+    networks:
+      - temporal-network
+    expose:
+      - 5432
+    volumes:
+      - ./.pki:/pki
+  temporal:
+    container_name: temporal
+    build:
+      context: .
+      dockerfile: tls/Dockerfile.auto-setup-tls
+      args:
+        - BASEIMAGE=auto-setup:${TEMPORAL_VERSION}
+    image: auto-setup-tls:${TEMPORAL_VERSION}
+    depends_on:
+      - postgresql
+      - elasticsearch
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql
+      - SQL_TLS=true
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql_es.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - ES_SCHEME=https
+      - ES_USER=elastic
+      - ES_PWD=elastic
+    networks:
+      - temporal-network
+    ports:
+      - 7233:7233
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    build:
+      context: .
+      dockerfile: tls/Dockerfile.admin-tools-tls
+      args:
+        - BASEIMAGE=admin-tools:${TEMPORAL_VERSION}
+    image: temporalio/admin-tools-tls:${TEMPORAL_VERSION}
+    networks:
+      - temporal-network
+    stdin_open: true
+    tty: true
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - 8080:8080
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network

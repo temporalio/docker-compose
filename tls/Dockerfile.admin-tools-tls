@@ -1,0 +1,6 @@
+ARG BASEIMAGE
+FROM temporalio/${BASEIMAGE}
+
+COPY ./.pki/ca.pem /usr/local/share/ca-certificates/ca.crt
+
+RUN update-ca-certificates

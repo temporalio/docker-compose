@@ -1,0 +1,6 @@
+FROM golang
+
+RUN go install github.com/cloudflare/cfssl/cmd/cfssl@latest
+RUN go install github.com/cloudflare/cfssl/cmd/cfssljson@latest
+
+ENTRYPOINT [ "/go/bin/cfssl" ]
