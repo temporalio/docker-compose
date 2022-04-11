@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1.3-labs 
+
+FROM golang
+
+RUN go install github.com/cloudflare/cfssl/cmd/cfssl@latest
+RUN go install github.com/cloudflare/cfssl/cmd/cfssljson@latest
+
+VOLUME ["/pki"]
+WORKDIR /pki
+
+VOLUME ["/pki-out"]
+
+RUN <<EOF
+    echo '{"CN":"CA","key":{"algo":"rsa","size":2048}}' | cfssl gencert -initca - | cfssljson -bare ca -
+    echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth"]}}}' > ca-config.json
+    echo '{"CN":"postgresql","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,postgresql" - | cfssljson -bare postgresql
+    echo '{"CN":"elasticsearch","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,elasticsearch" - | cfssljson -bare elasticsearch
+
+    chgrp 999 postgresql-key.pem
+    chmod 640 postgresql-key.pem
+    chmod 640 elasticsearch-key.pem
+EOF
+
+ENTRYPOINT cp /pki/ca.pem /pki-out/ca.pem

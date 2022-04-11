@@ -25,7 +25,7 @@ services:
     expose:
       - 9200
     volumes:
-      - ./.pki:/usr/share/elasticsearch/config/certs
+      - temporal_tls_pki:/usr/share/elasticsearch/config/certs
   postgresql:
     container_name: temporal-postgresql
     command: 
@@ -46,7 +46,7 @@ services:
     expose:
       - 5432
     volumes:
-      - ./.pki:/pki
+      - temporal_tls_pki:/pki
   temporal:
     container_name: temporal
     build:
@@ -110,3 +110,7 @@ networks:
   temporal-network:
     driver: bridge
     name: temporal-network
+
+volumes:
+  temporal_tls_pki:
+   external: true
