@@ -26,6 +26,7 @@ services:
       - 9200
     volumes:
       - temporal_tls_pki:/usr/share/elasticsearch/config/certs
+    restart: on-failure
   postgresql:
     container_name: temporal-postgresql
     command: 
@@ -47,6 +48,7 @@ services:
       - 5432
     volumes:
       - temporal_tls_pki:/pki
+    restart: on-failure
   temporal:
     container_name: temporal
     build:
@@ -78,6 +80,7 @@ services:
       - 7233:7233
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    restart: on-failure
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
@@ -106,6 +109,7 @@ services:
       - temporal-network
     ports:
       - 8080:8080
+    restart: on-failure
 networks:
   temporal-network:
     driver: bridge

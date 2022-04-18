@@ -1,13 +1,3 @@
-# Temporal with tls enabled dependencies
-
-## Execute
-
-run from a shell
-
-`./tls/run-tls.sh`
-
-## Script source with comments
-```bash
 #!/usr/bin/env bash
 set -xe
 
@@ -26,5 +16,3 @@ COMPOSE_PROJECT_NAME=tls_test docker-compose -f docker-compose-tls.yml build --n
 
 # Run example docker-compose environment with elasticsearch and postgresql protected with TLS
 COMPOSE_PROJECT_NAME=tls_test docker-compose -f docker-compose-tls.yml up
-
-```
