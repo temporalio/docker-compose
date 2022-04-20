@@ -17,7 +17,7 @@ The following steps will run a local instance of the Temporal Server using the d
 
 1. Clone this repository.
 2. Change directory into the root of the project.
-3. Run the `docker-compose up` command.
+3. Run the `docker-compose --env-file .env up` command.
 
 ```bash
 git clone https://github.com/temporalio/docker-compose.git
