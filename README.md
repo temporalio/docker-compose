@@ -115,7 +115,7 @@ docker-compose up
 
 1. Create an Astra DB at [https://astra.datastax.com/](https://astra.datastax.com/)
 2. Add two keyspaces in the Astra DB UI via "Add Keyspace": `temporal` and `temporal_visibility`
-3. Create a new [Astra token] and get your DB's identifier
+3. Create a new [Astra token](https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) and get your DB's identifier
   * DB identifer is the "Datacenter ID" without the `-1` at the end (you'll have to copy and remove that trailing `-1`)
 4. Update the `.env` file with your `ASTRA_TOKEN` and `ASTRA_DATABASE_ID`
 5. Update the Temporal schema by running these commands:
