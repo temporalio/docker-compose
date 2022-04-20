@@ -120,7 +120,7 @@ docker-compose up
 4. Update the `.env` file with your `ASTRA_TOKEN` and `ASTRA_DATABASE_ID`
 5. Update the Temporal schema by running these commands:
 
-```
+```bash
 docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
   -ep cql-proxy -k temporal setup-schema -v 0.0
 docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
@@ -134,7 +134,9 @@ docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
 
 6. Run Temporal!
 
-`docker-compose -f docker-compose-astra up`
+```bash
+docker-compose -f docker-compose-astra up
+```
 
 ## Using Temporal docker images in production
 
