@@ -68,6 +68,7 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-mysql-es.yml        | MySQL and Elasticsearch                |
 | docker-compose-cockroach.yml       | CockroachDB                            |
 | docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
+| docker-compose-astra.yml           | DataStax Astra DB                      |
 | docker-compose-ui-experimental.yml | Web v2 Beta (Experimental)             |
 
 ### Using the new, experimental web interface
@@ -109,6 +110,30 @@ Then run the `docker-compose up` command:
 ```bash
 docker-compose up
 ```
+
+## Using Temporal with DataStax Astra DB
+
+* Create an Astra DB at [https://astra.datastax.com/](https://astra.datastax.com/)
+* Add two keyspaces in the Astra DB UI via "Add Keyspace": `temporal` and `temporal_visibility`
+* Create a new [Astra token] and get your DB's identifier
+  * DB identifer is the "Datacenter ID" without the `-1` at the end (you'll have to copy and remove that trailing `-1`)
+* Update the `.env` file with your `ASTRA_TOKEN` and `ASTRA_DATABASE_ID`
+* Update the Temporal schema by running these commands:
+
+```
+docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
+  -ep cql-proxy -k temporal setup-schema -v 0.0
+docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
+  -ep cql-proxy -k temporal update-schema -d schema/cassandra/temporal/versioned/
+
+docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
+  -ep cql-proxy -k temporal_visibility setup-schema -v 0.0
+docker-compose -f docker-compose-schema.yaml run temporal-admin-tools \
+  -ep cql-proxy -k temporal_visibility update-schema -d schema/cassandra/visibility/versioned/
+```
+
+Run Temporal!
+`docker-compose -f docker-compose-astra up`
 
 ## Using Temporal docker images in production
 

@@ -1,0 +1,38 @@
+version: "3.5"
+services:
+  cql-proxy:
+    container_name: cqlproxy
+    image: datastax/cql-proxy:v${CQL_PROXY_VERSION}
+    healthcheck:
+      test: 'printf "GET /readiness HTTP/1.0\r\nHost: localhost\r\n\r\n" | nc localhost 8000 | grep "200 OK"'
+      interval: 1s
+      timeout: 5s
+      retries: 5
+    networks:
+      - temporal-network
+    ports:
+      - 9042:9042
+      - 8000:8000
+    environment:
+      - ASTRA_TOKEN=${ASTRA_TOKEN}
+      - ASTRA_DATABASE_ID=${ASTRA_DATABASE_ID}
+      - HEALTH_CHECK=true
+  temporal-admin-tools:
+    container_name: temporal-admin-tools
+    volumes:
+      - ./schema/cassandra/:/etc/temporal/schema/cassandra/
+    depends_on:
+      cql-proxy:
+        condition: service_healthy # Wait for readiness check on cql-proxy
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
+    entrypoint: /usr/local/bin/temporal-cassandra-tool
+    networks:
+      - temporal-network
+        #stdin_open: true
+        #tty: true
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network       
