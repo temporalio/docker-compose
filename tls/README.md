@@ -45,15 +45,13 @@ COMPOSE_PROJECT_NAME=tls_test docker-compose -f docker-compose-tls.yml up
 flowchart TD
     T[tctl] -->|temporal.pem| F(temporal:7233)
 
-    B[browser] -->|localhost:8080| U(temporal-ui)
-    U -->|temporal.pem| F
+    B[browser] -.->|localhost:8080| U[[temporal-ui]]
+    U -.->|temporal.pem| F
 
-    F -.->|elasticsearch.pem| E[elasticsearch]
-    F -->|postgres.pem| P[postgres]
-    F <-->|temporal-internode.pem| H[temporal-history]
-    F <-->|temporal-internode.pem| M[temporal-matching]
-
-
+    F -.->|elasticsearch.pem| E[(elasticsearch)]
+    F -->|postgres.pem| P[(postgres)]
+    F <-->|temporal-internode.pem| H(temporal-history)
+    F <-->|temporal-internode.pem| M(temporal-matching)
 
     M <-->|temporal-internode.pem| H
     M -->|postgres.pem| P
@@ -61,7 +59,7 @@ flowchart TD
     H -.->|elasticsearch.pem| E
     H -->|postgres.pem| P
 
-    W[temporal-worker] -->|temporal.pem| F
+    W(temporal-worker) -->|temporal.pem| F
 ```
 
 > Original source from [Temporal Server self-hosted production deployment](https://docs.temporal.io/docs/server/production-deployment)
