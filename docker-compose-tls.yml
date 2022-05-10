@@ -29,9 +29,9 @@ services:
     restart: on-failure
   postgresql:
     container_name: temporal-postgresql
-    command: 
+    command:
       - "-c"
-      - "ssl=on" 
+      - "ssl=on"
       - "-c"
       - "ssl_cert_file=/pki/postgresql.pem"
       - "-c"
@@ -61,32 +61,53 @@ services:
       - postgresql
       - elasticsearch
     environment:
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
-      - SQL_TLS=true
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql_es.yaml
-      - ENABLE_ES=true
-      - ES_SEEDS=elasticsearch
-      - ES_VERSION=v7
-      - ES_SCHEME=https
-      - ES_USER=elastic
-      - ES_PWD=elastic
+      DB: postgresql
+      DB_PORT: "5432"
+      POSTGRES_USER: temporal
+      POSTGRES_PWD: temporal
+      POSTGRES_SEEDS: postgresql
+      SQL_TLS: "true"
+      DYNAMIC_CONFIG_FILE_PATH: config/dynamicconfig/development_sql_es.yaml
+      ENABLE_ES: "true"
+      ES_SEEDS: elasticsearch
+      ES_VERSION: v7
+      ES_SCHEME: https
+      ES_USER: elastic
+      ES_PWD: elastic
+      TEMPORAL_TLS_FRONTEND_CERT: ${TEMPORAL_TLS_FRONTEND_CERT}
+      TEMPORAL_TLS_FRONTEND_KEY: ${TEMPORAL_TLS_FRONTEND_KEY}
+      TEMPORAL_TLS_FRONTEND_SERVER_NAME: ${TEMPORAL_TLS_FRONTEND_SERVER_NAME}
+      TEMPORAL_TLS_INTERNODE_SERVER_NAME: ${TEMPORAL_TLS_INTERNODE_SERVER_NAME}
+      TEMPORAL_TLS_SERVER_CA_CERT: ${TEMPORAL_TLS_SERVER_CA_CERT}
+      TEMPORAL_TLS_SERVER_CERT: ${TEMPORAL_TLS_SERVER_CERT}
+      TEMPORAL_TLS_SERVER_KEY: ${TEMPORAL_TLS_SERVER_KEY}
+      TEMPORAL_CLI_TLS_SERVER_NAME: ${TEMPORAL_TLS_FRONTEND_SERVER_NAME}
+      TEMPORAL_CLI_TLS_CA: ${TEMPORAL_TLS_SERVER_CA_CERT}
     networks:
       - temporal-network
     ports:
       - 7233:7233
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+      - temporal_tls_pki:/pki
     restart: on-failure
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
       - temporal
     environment:
-      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      TEMPORAL_CLI_ADDRESS: "temporal:7233"
+      TEMPORAL_TLS_FRONTEND_CERT: ${TEMPORAL_TLS_FRONTEND_CERT}
+      TEMPORAL_TLS_FRONTEND_KEY: ${TEMPORAL_TLS_FRONTEND_KEY}
+      TEMPORAL_TLS_FRONTEND_SERVER_NAME: ${TEMPORAL_TLS_FRONTEND_SERVER_NAME}
+      TEMPORAL_TLS_INTERNODE_SERVER_NAME: ${TEMPORAL_TLS_INTERNODE_SERVER_NAME}
+      TEMPORAL_TLS_SERVER_CA_CERT: ${TEMPORAL_TLS_SERVER_CA_CERT}
+      TEMPORAL_TLS_SERVER_CERT: ${TEMPORAL_TLS_SERVER_CERT}
+      TEMPORAL_TLS_SERVER_KEY: ${TEMPORAL_TLS_SERVER_KEY}
+      TEMPORAL_CLI_TLS_SERVER_NAME: ${TEMPORAL_TLS_FRONTEND_SERVER_NAME}
+      TEMPORAL_CLI_TLS_CA: ${TEMPORAL_TLS_SERVER_CA_CERT}
+    volumes:
+      - temporal_tls_pki:/pki
     build:
       context: .
       dockerfile: tls/Dockerfile.admin-tools-tls
@@ -102,8 +123,12 @@ services:
     depends_on:
       - temporal
     environment:
-      - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_CORS_ORIGINS: http://localhost:3000
+      TEMPORAL_TLS_CA: ${TEMPORAL_TLS_SERVER_CA_CERT}
+      TEMPORAL_TLS_SERVER_NAME: ${TEMPORAL_TLS_FRONTEND_SERVER_NAME}
+    volumes:
+      - temporal_tls_pki:/pki
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
       - temporal-network
