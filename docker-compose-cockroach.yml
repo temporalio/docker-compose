@@ -25,7 +25,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PWD=
       - POSTGRES_SEEDS=postgres
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     links:
       - cockroach:postgres

@@ -29,7 +29,7 @@ services:
       - elasticsearch
     environment:
       - CASSANDRA_SEEDS=cassandra
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_cass.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-cass.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
