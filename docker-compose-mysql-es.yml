@@ -34,7 +34,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_PWD=root
       - MYSQL_SEEDS=mysql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql_es.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
