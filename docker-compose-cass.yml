@@ -13,7 +13,7 @@ services:
       - cassandra
     environment:
       - CASSANDRA_SEEDS=cassandra
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_cass.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-cass.yaml
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
       - temporal-network

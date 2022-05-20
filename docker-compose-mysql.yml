@@ -19,7 +19,7 @@ services:
       - MYSQL_USER=root
       - MYSQL_PWD=root
       - MYSQL_SEEDS=mysql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development_sql.yaml
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
       - temporal-network
