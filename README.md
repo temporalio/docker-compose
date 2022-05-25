@@ -72,11 +72,16 @@ Here is a list of available files and the dependencies they use.
 
 ### Using the new, experimental web interface
 
+`docker-compose.yml ` includes both the Temporal Web UI v1, and the new Temporal Web UI v2.
+
+If you run command:
+
 ```bash
-docker-compose -f docker-compose-ui-experimental.yml up
+docker-compose up
 ```
 
-The web interface is located at `http://localhost:8080` by default.
+You access the new Temporal Web UI v2 at `http://localhost:8080`.
+Note that you can also access the Temporal Web UI v1 at `http://localhost:8088`.
 
 ### Enabling metrics (with Grafana and Prometheus)
 
