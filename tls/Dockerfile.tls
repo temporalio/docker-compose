@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.3-labs 
+# syntax=docker/dockerfile:1.3-labs
 
 FROM golang
 
@@ -15,10 +15,17 @@ RUN <<EOF
     echo '{"signing":{"default":{"expiry":"43800h","usages":["signing","key encipherment","server auth"]}}}' > ca-config.json
     echo '{"CN":"postgresql","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,postgresql" - | cfssljson -bare postgresql
     echo '{"CN":"elasticsearch","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,elasticsearch" - | cfssljson -bare elasticsearch
+    echo '{"CN":"","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,temporal,temporal-frontend" - | cfssljson -bare temporal
+    echo '{"CN":"","hosts":[""],"key":{"algo":"rsa","size":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname="127.0.0.1,localhost,temporal,temporal-internode" - | cfssljson -bare temporal-internode
 
     chgrp 999 postgresql-key.pem
     chmod 640 postgresql-key.pem
     chmod 640 elasticsearch-key.pem
+
+    chgrp 1000 temporal.pem temporal-key.pem
+    chgrp 1000 temporal-internode.pem temporal-internode-key.pem
+    chmod 640 temporal-key.pem
+    chmod 640 temporal-internode-key.pem
 EOF
 
 ENTRYPOINT cp /pki/ca.pem /pki-out/ca.pem
