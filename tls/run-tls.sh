@@ -2,7 +2,7 @@
 set -xe
 
 # Build container image for generating cert material
-docker build -t temporal_tls:test -f ${PWD}/tls/Dockerfile.tls .
+DOCKER_BUILDKIT=1 docker build -t temporal_tls:test -f ${PWD}/tls/Dockerfile.tls .
 mkdir -p .pki
 
 # Run container to name volume and copy out CA certificate
