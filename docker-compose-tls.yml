@@ -79,7 +79,7 @@ services:
     ports:
       - 7233:7233
     volumes:
-      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig:z
     restart: on-failure
   temporal-admin-tools:
     container_name: temporal-admin-tools
