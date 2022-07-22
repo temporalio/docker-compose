@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal
+    kompose.cmd: kompose convert -f docker-compose-postgres.yml -o ./k8s/temporal-postgres
     kompose.version: 1.26.1 (1b040dd2)
   creationTimestamp: null
   labels:
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal
+        kompose.cmd: kompose convert -f docker-compose-postgres.yml -o ./k8s/temporal-postgres
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:

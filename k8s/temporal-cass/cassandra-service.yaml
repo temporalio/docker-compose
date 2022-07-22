@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-cass.yml -o ./k8s/temporal-cass
+    kompose.version: 1.26.1 (1b040dd2)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: cassandra
+  name: cassandra
+spec:
+  ports:
+    - name: "9042"
+      port: 9042
+      targetPort: 9042
+  selector:
+    io.kompose.service: cassandra
+status:
+  loadBalancer: {}

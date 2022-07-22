@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-cass-es.yml -o ./k8s/temporal-cass-es
+    kompose.version: 1.26.1 (1b040dd2)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: elasticsearch
+  name: elasticsearch
+spec:
+  ports:
+    - name: "9200"
+      port: 9200
+      targetPort: 9200
+  selector:
+    io.kompose.service: elasticsearch
+status:
+  loadBalancer: {}

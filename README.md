@@ -4,6 +4,8 @@ This repository provides docker-compose files that enable you to run a local ins
 There are a variety of docker-compose files, each utilizing a different set of dependencies.
 Every major or minor release of the Temporal Server has a corresponding docker-compose release.
 
+Alongside the docker compose files you can find Kubernetes manifests suitable for setting up a development version of Temporal in a Kubernetes cluster. These files can be found in [k8s](./k8s) directory, each directory holds the manifests related to one of the docker compose files. Details of using these manifests can be found in [KUBERNETES](./KUBERNETES.md).
+
 ## Prerequisites
 
 To use these files, you must first have the following installed:

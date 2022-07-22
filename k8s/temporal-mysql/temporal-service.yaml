@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-mysql.yml -o ./k8s/temporal-mysql
+    kompose.version: 1.26.1 (1b040dd2)
+    kompose.volume.type: configMap
+  creationTimestamp: null
+  labels:
+    io.kompose.service: temporal
+  name: temporal
+spec:
+  ports:
+    - name: "7233"
+      port: 7233
+      targetPort: 7233
+  selector:
+    io.kompose.service: temporal
+status:
+  loadBalancer: {}

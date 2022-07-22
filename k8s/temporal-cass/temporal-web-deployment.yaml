@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-cass.yml -o ./k8s/temporal-cass
+    kompose.version: 1.26.1 (1b040dd2)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: temporal-web
+  name: temporal-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: temporal-web
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-cass.yml -o ./k8s/temporal-cass
+        kompose.version: 1.26.1 (1b040dd2)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temporal-network: "true"
+        io.kompose.service: temporal-web
+    spec:
+      containers:
+        - env:
+            - name: TEMPORAL_GRPC_ENDPOINT
+              value: temporal:7233
+            - name: TEMPORAL_PERMIT_WRITE_API
+              value: "true"
+          image: temporalio/web:1.15.0
+          name: temporal-web
+          ports:
+            - containerPort: 8088
+          resources: {}
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-cass-es.yml -o ./k8s/temporal-cass-es
+    kompose.version: 1.26.1 (1b040dd2)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: temporal-admin-tools
+  name: temporal-admin-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: temporal-admin-tools
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose-cass-es.yml -o ./k8s/temporal-cass-es
+        kompose.version: 1.26.1 (1b040dd2)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temporal-network: "true"
+        io.kompose.service: temporal-admin-tools
+    spec:
+      containers:
+        - env:
+            - name: TEMPORAL_CLI_ADDRESS
+              value: temporal:7233
+          image: temporalio/admin-tools:1.17.1
+          name: temporal-admin-tools
+          resources: {}
+          stdin: true
+          tty: true
+      restartPolicy: Always
+status: {}
