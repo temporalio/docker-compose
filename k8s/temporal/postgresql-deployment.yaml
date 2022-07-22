@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal
+    kompose.version: 1.26.1 (1b040dd2)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: postgresql
+  name: postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: postgresql
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal
+        kompose.version: 1.26.1 (1b040dd2)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/temporal-network: "true"
+        io.kompose.service: postgresql
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_PASSWORD
+              value: temporal
+            - name: POSTGRES_USER
+              value: temporal
+          image: postgres:13
+          name: temporal-postgresql
+          ports:
+            - containerPort: 5432
+          resources: {}
+      restartPolicy: Always
+status: {}

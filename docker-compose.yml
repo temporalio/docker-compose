@@ -45,6 +45,10 @@ services:
       - temporal-network
     ports:
       - 7233:7233
+    labels:
+      kompose.volume.type: configMap
+      kompose.service.type: loadbalancer
+      kompose.service.expose: true
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
   temporal-admin-tools:
@@ -63,6 +67,7 @@ services:
     depends_on:
       - temporal
     environment:
+      - TEMPORAL_UI_PORT=8080
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
@@ -70,6 +75,9 @@ services:
       - temporal-network
     ports:
       - 8080:8080
+    labels:
+      kompose.service.type: loadbalancer
+      kompose.service.expose: true
   temporal-web:
     container_name: temporal-web
     depends_on:
@@ -82,6 +90,9 @@ services:
       - temporal-network
     ports:
       - 8088:8088
+    labels:
+      kompose.service.type: loadbalancer
+      kompose.service.expose: true
 networks:
   temporal-network:
     driver: bridge
