@@ -11,16 +11,10 @@ You must have `kubectl` configured and be able to succesfully run commands like 
 
 ## How to use
 
-The following steps will run a developer setup of the Temporal Server and its default dependencies in the `temporal` namespace in your Kubernetes cluster:
-
-1. Clone this repository.
-2. Change directory into the root of the project.
-3. Run the `kubectl apply -n temporal -R -f ./k8s/temporal-default` command.
+The following command will run a developer setup of the Temporal Server and its default dependencies in the `temporal` namespace in your Kubernetes cluster:
 
 ```bash
-git clone https://github.com/temporalio/docker-compose.git
-cd docker-compose
-kubectl apply -n temporal -R -f k8s/temporal-default
+kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal-default.yaml
 ```
 
 You can check to see when everything is up and running using `kubectl get pods -n temporal` and checking that all pods are showing `STATUS` as `RUNNING`.
@@ -57,7 +51,7 @@ The other manifest directories in the repo spin up instances of the Temporal Ser
 For example you can run the Temporal Server with MySQL and Elastic Search with this command:
 
 ```bash
-kubectl apply -n temporal -R -f ./k8s/temporal-mysql-es
+kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal-mysql-es.yaml
 ```
 
 Here is a list of available manifest sets and the dependencies they install.
