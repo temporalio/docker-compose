@@ -2,6 +2,8 @@ k8s: k8s/temporal-default.yaml k8s/temporal-postgres.yaml k8s/temporal-mysql.yam
 
 k8s/temporal-default.yaml: docker-compose.yml
 	kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+	yq -i '(.items.[] | select(.kind == "Deployment") | .spec.template.spec.enableServiceLinks) = false' $@
 
 k8s/temporal-%.yaml: docker-compose-%.yml
 	kompose convert -f $< -o $@
+	yq -i '(.items.[] | select(.kind == "Deployment") | .spec.template.spec.enableServiceLinks) = false' $@

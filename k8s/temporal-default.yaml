@@ -144,6 +144,7 @@ items:
                 - containerPort: 9200
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
@@ -197,6 +198,7 @@ items:
                 - containerPort: 5432
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: apps/v1
     kind: Deployment
@@ -260,6 +262,7 @@ items:
             - configMap:
                 name: temporal-cm0
               name: temporal-cm0
+          enableServiceLinks: false
     status: {}
   - apiVersion: v1
     data:
@@ -357,6 +360,7 @@ items:
               stdin: true
               tty: true
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: apps/v1
     kind: Deployment
@@ -390,14 +394,13 @@ items:
                   value: temporal:7233
                 - name: TEMPORAL_CORS_ORIGINS
                   value: http://localhost:3000
-                - name: TEMPORAL_UI_PORT
-                  value: "8080"
               image: temporalio/ui:2.2.3
               name: temporal-ui
               ports:
                 - containerPort: 8080
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: apps/v1
     kind: Deployment
@@ -437,7 +440,7 @@ items:
                 - containerPort: 8088
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
 kind: List
 metadata: {}
-

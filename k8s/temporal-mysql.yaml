@@ -94,6 +94,7 @@ items:
                 - containerPort: 3306
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
@@ -165,6 +166,7 @@ items:
             - configMap:
                 name: temporal-cm0
               name: temporal-cm0
+          enableServiceLinks: false
     status: {}
   - apiVersion: v1
     data:
@@ -262,6 +264,7 @@ items:
               stdin: true
               tty: true
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
   - apiVersion: apps/v1
     kind: Deployment
@@ -301,7 +304,7 @@ items:
                 - containerPort: 8088
               resources: {}
           restartPolicy: Always
+          enableServiceLinks: false
     status: {}
 kind: List
 metadata: {}
-
