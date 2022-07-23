@@ -14,6 +14,7 @@ You must have `kubectl` configured and be able to succesfully run commands like 
 The following command will run a developer setup of the Temporal Server and its default dependencies in the `temporal` namespace in your Kubernetes cluster:
 
 ```bash
+kubectl create namespace temporal
 kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal-default.yaml
 ```
 
@@ -51,6 +52,7 @@ The other manifest directories in the repo spin up instances of the Temporal Ser
 For example you can run the Temporal Server with MySQL and Elastic Search with this command:
 
 ```bash
+kubectl create namespace temporal
 kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal-mysql-es.yaml
 ```
 
