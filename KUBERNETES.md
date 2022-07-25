@@ -15,7 +15,7 @@ The following command will run a developer setup of the Temporal Server and its 
 
 ```bash
 kubectl create namespace temporal
-kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal-default.yaml
+kubectl apply -n temporal -R -f https://raw.githubusercontent.com/temporalio/docker-compose/main/k8s/temporal.yaml
 ```
 
 You can check to see when everything is up and running using `kubectl get pods -n temporal` and checking that all pods are showing `STATUS` as `RUNNING`.

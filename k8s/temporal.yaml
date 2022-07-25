@@ -4,7 +4,7 @@ items:
     kind: Service
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -23,7 +23,7 @@ items:
     kind: Service
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -42,7 +42,7 @@ items:
     kind: Service
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
         kompose.volume.type: configMap
       creationTimestamp: null
@@ -62,7 +62,7 @@ items:
     kind: Service
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -81,7 +81,7 @@ items:
     kind: Service
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -100,7 +100,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -115,7 +115,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
           creationTimestamp: null
           labels:
@@ -164,7 +164,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -179,7 +179,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
           creationTimestamp: null
           labels:
@@ -204,7 +204,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
         kompose.volume.type: configMap
       creationTimestamp: null
@@ -221,7 +221,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
             kompose.volume.type: configMap
           creationTimestamp: null
@@ -328,7 +328,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -343,7 +343,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
           creationTimestamp: null
           labels:
@@ -366,7 +366,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -381,7 +381,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
           creationTimestamp: null
           labels:
@@ -406,7 +406,7 @@ items:
     kind: Deployment
     metadata:
       annotations:
-        kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+        kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
         kompose.version: 1.26.1 (1b040dd2)
       creationTimestamp: null
       labels:
@@ -421,7 +421,7 @@ items:
       template:
         metadata:
           annotations:
-            kompose.cmd: kompose convert -f docker-compose.yml -o ./k8s/temporal-default.yaml
+            kompose.cmd: kompose convert -f docker-compose.yml -o k8s/temporal.yaml
             kompose.version: 1.26.1 (1b040dd2)
           creationTimestamp: null
           labels:
