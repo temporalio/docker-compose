@@ -1,7 +1,7 @@
 version: "3.5"
 services:
-  elasticsearch:
-    container_name: temporal-elasticsearch
+  elasticsearch_a:
+    container_name: temporal-elasticsearch-a
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
@@ -13,77 +13,193 @@ services:
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
       - temporal-network
-    expose:
-      - 9200
-  postgresql:
-    container_name: temporal-postgresql
+    ports:
+      - "9200:9200"
+  elasticsearch_b:
+    container_name: temporal-elasticsearch-b
+    environment:
+      - cluster.routing.allocation.disk.threshold_enabled=true
+      - cluster.routing.allocation.disk.watermark.low=512mb
+      - cluster.routing.allocation.disk.watermark.high=256mb
+      - cluster.routing.allocation.disk.watermark.flood_stage=128mb
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - xpack.security.enabled=false
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - "9201:9200"
+
+  postgresql_a:
+    container_name: temporal-postgresql-a
     environment:
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
     image: postgres:${POSTGRESQL_VERSION}
     networks:
       - temporal-network
-    expose:
-      - 5432
-  temporal:
-    container_name: temporal
+    ports:
+      - "5432:5432"
+
+  postgresql_b:
+    container_name: temporal-postgresql-b
+    environment:
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_USER: temporal
+    image: postgres:${POSTGRESQL_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - "5433:5432"
+
+  temporal_a:
+    container_name: temporal-a
     depends_on:
-      - postgresql
-      - elasticsearch
+      - postgresql_a
+      - elasticsearch_a
     environment:
       - DB=postgresql
       - DB_PORT=5432
       - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
+      - POSTGRES_SEEDS=postgresql_a
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
       - ENABLE_ES=true
-      - ES_SEEDS=elasticsearch
+      - ES_SEEDS=elasticsearch_a
       - ES_VERSION=v7
+      - SKIP_DEFAULT_NAMESPACE_CREATION=true
+      - SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES=true
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
       - temporal-network
     ports:
-      - 7233:7233
+      - "7233:7233"
     labels:
       kompose.volume.type: configMap
     volumes:
-      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
-  temporal-admin-tools:
-    container_name: temporal-admin-tools
+      - ./dynamicconfig/a:/etc/temporal/config/dynamicconfig
+      - ./config/a/config_template.yaml:/etc/temporal/config/config_template.yaml
+
+  temporal_b:
+    container_name: temporal-b
     depends_on:
-      - temporal
+      - postgresql_b
+      - elasticsearch_b
     environment:
-      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql_b
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch_b
+      - ES_VERSION=v7
+      - SKIP_DEFAULT_NAMESPACE_CREATION=true
+      - SKIP_ADD_CUSTOM_SEARCH_ATTRIBUTES=true
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - "8233:7233"
+    labels:
+      kompose.volume.type: configMap
+    volumes:
+      - ./dynamicconfig/b:/etc/temporal/config/dynamicconfig
+      - ./config/b/config_template.yaml:/etc/temporal/config/config_template.yaml
+
+  temporal-admin-tools-a:
+    container_name: temporal-admin-tools-a
+    depends_on:
+      - temporal_a
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal_a:7233
     image: temporalio/admin-tools:${TEMPORAL_VERSION}
     networks:
       - temporal-network
     stdin_open: true
     tty: true
-  temporal-ui:
-    container_name: temporal-ui
+
+  temporal-namespace-init:
+    container_name: temporal-namespace-init
     depends_on:
-      - temporal
+      - temporal_a
+      - temporal_b
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
+    networks:
+      - temporal-network
+    restart: "no"
+    entrypoint: [
+      "bash",
+      "-c",
+      "sleep 30 && tctl --address \"temporal_a:7233\" --namespace \"workflow-engine-sandbox\" namespace register --description \"<description>\" --retention \"1\" --global_namespace \"true\" && tctl --address \"temporal_b:7233\" --namespace \"workflow-engine-sandbox\" namespace register --description \"<description>\" --retention \"1\" --global_namespace \"true\""
+    ]
+
+  temporal-admin-tools-b:
+    container_name: temporal-admin-tools-b
+    depends_on:
+      - temporal_b
     environment:
-      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal_b:7233
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
+    networks:
+      - temporal-network
+    stdin_open: true
+    tty: true
+
+  temporal-ui-a:
+    container_name: temporal-ui-a
+    depends_on:
+      - temporal_a
+    environment:
+      - TEMPORAL_ADDRESS=temporal_a:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
       - temporal-network
     ports:
-      - 8080:8080
-  temporal-web:
-    container_name: temporal-web
+      - "8080:8080"
+
+  temporal-ui-b:
+    container_name: temporal-ui-b
     depends_on:
-      - temporal
+      - temporal_b
     environment:
-      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+      - TEMPORAL_ADDRESS=temporal_b:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - "8081:8080"
+
+  temporal-web-a:
+    container_name: temporal-web-a
+    depends_on:
+      - temporal_a
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal_a:7233
       - TEMPORAL_PERMIT_WRITE_API=true
     image: temporalio/web:${TEMPORAL_WEB_VERSION}
     networks:
       - temporal-network
     ports:
-      - 8088:8088
+      - "8088:8088"
+
+  temporal-web-b:
+    container_name: temporal-web-b
+    depends_on:
+      - temporal_b
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal_b:7233
+      - TEMPORAL_PERMIT_WRITE_API=true
+    image: temporalio/web:${TEMPORAL_WEB_VERSION}
+    networks:
+      - temporal-network
+    ports:
+      - "8089:8088"
+
 networks:
   temporal-network:
     driver: bridge
