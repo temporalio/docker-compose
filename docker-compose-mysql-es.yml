@@ -30,6 +30,7 @@ services:
       - mysql
       - elasticsearch
     environment:
+      - TEMPORAL_ALLOW_NO_AUTH=true
       - DB=mysql
       - MYSQL_USER=root
       - MYSQL_PWD=root

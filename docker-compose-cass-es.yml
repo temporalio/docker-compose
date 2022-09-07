@@ -28,6 +28,7 @@ services:
       - cassandra
       - elasticsearch
     environment:
+      - TEMPORAL_ALLOW_NO_AUTH=true
       - CASSANDRA_SEEDS=cassandra
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-cass.yaml
       - ENABLE_ES=true
