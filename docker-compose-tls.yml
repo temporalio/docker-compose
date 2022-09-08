@@ -61,6 +61,7 @@ services:
       - postgresql
       - elasticsearch
     environment:
+      - TEMPORAL_ALLOW_NO_AUTH=true
       - DB=postgresql
       - DB_PORT=5432
       - POSTGRES_USER=temporal
