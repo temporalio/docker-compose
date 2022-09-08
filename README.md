@@ -27,6 +27,10 @@ cd  docker-compose
 docker-compose up
 ```
 
+> ⚠️ Default configutation starts Temporal Server without any authorizer.
+> Check the [documentation](https://docs.temporal.io/concepts/what-is-an-authorizer-plugin/)
+> for more info about authorizers.
+
 > ⚠️ If you are on an M1 Mac, note that Temporal v1.12 to v1.14 had fatal issues with ARM builds. v1.14.2 onwards should be fine for M1 Macs.
 
 After the Server has started, you can open the Temporal Web UI in your browser: [http://localhost:8088](http://localhost:8088).
