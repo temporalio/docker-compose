@@ -20,7 +20,6 @@ services:
     depends_on:
       - cockroach
     environment:
-      - TEMPORAL_ALLOW_NO_AUTH=true
       - DB=postgresql
       - DB_PORT=26257
       - POSTGRES_USER=root
