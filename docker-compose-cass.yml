@@ -12,7 +12,6 @@ services:
     depends_on:
       - cassandra
     environment:
-      - TEMPORAL_ALLOW_NO_AUTH=true
       - CASSANDRA_SEEDS=cassandra
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-cass.yaml
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
