@@ -60,18 +60,6 @@ services:
       - temporal-network
     ports:
       - 8080:8080
-  temporal-web:
-    container_name: temporal-web
-    depends_on:
-      - temporal
-    environment:
-      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
-      - TEMPORAL_PERMIT_WRITE_API=true
-    image: temporalio/web:${TEMPORAL_WEB_VERSION}
-    networks:
-      - temporal-network
-    ports:
-      - 8088:8088
 networks:
   temporal-network:
     driver: bridge
