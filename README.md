@@ -72,9 +72,9 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-cockroach.yml       | CockroachDB                            |
 | docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
 
-### Using the new web interface
+### Using the web interface
 
-`docker-compose.yml ` includes both the Temporal Web UI v1, and the new Temporal Web UI v2.
+`docker-compose.yml ` includes the Temporal Web UI.
 
 If you run command:
 
@@ -82,8 +82,7 @@ If you run command:
 docker-compose up
 ```
 
-You access the new Temporal Web UI v2 at `http://localhost:8080`.
-Note that you can also access the Temporal Web UI v1 at `http://localhost:8088`.
+You access the Temporal Web UI at `http://localhost:8080`.
 
 ### Enabling metrics (with Grafana and Prometheus)
 
