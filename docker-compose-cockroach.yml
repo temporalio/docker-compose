@@ -15,6 +15,8 @@ services:
     security_opt:
       - no-new-privileges
     tty: false
+    volumes:
+      - db-data:/var/lib/cockroach
   temporal:
     container_name: temporal
     depends_on:
@@ -64,3 +66,5 @@ networks:
   temporal-network:
     driver: bridge
     name: temporal-network
+volumes:
+  db-data:

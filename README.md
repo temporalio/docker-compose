@@ -63,6 +63,7 @@ Here is a list of available files and the dependencies they use.
 | File                               | Description                            |
 |------------------------------------| -------------------------------------- |
 | docker-compose.yml                 | PostgreSQL and Elasticsearch (default) |
+| docker-compose-tls.yml             | PostgreSQL and Elasticsearch with TLS  |
 | docker-compose-postgres.yml        | PostgreSQL                             |
 | docker-compose-cass.yml            | Cassandra                              |
 | docker-compose-cass-es.yml         | Cassandra and Elasticsearch            |
@@ -70,9 +71,8 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-mysql-es.yml        | MySQL and Elasticsearch                |
 | docker-compose-cockroach.yml       | CockroachDB                            |
 | docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
-| docker-compose-ui-experimental.yml | Web v2 Beta (Experimental)             |
 
-### Using the new, experimental web interface
+### Using the new web interface
 
 `docker-compose.yml ` includes both the Temporal Web UI v1, and the new Temporal Web UI v2.
 

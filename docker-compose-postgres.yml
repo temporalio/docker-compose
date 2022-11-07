@@ -10,6 +10,8 @@ services:
       - temporal-network
     ports:
       - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
   temporal:
     container_name: temporal
     depends_on:
@@ -57,3 +59,5 @@ networks:
   temporal-network:
     driver: bridge
     name: temporal-network
+volumes:
+  db-data:

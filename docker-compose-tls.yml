@@ -26,6 +26,7 @@ services:
       - 9200
     volumes:
       - temporal_tls_pki:/usr/share/elasticsearch/config/certs
+      - es-data:/var/lib/elasticsearch/data
     restart: on-failure
   postgresql:
     container_name: temporal-postgresql
@@ -48,6 +49,7 @@ services:
       - 5432
     volumes:
       - temporal_tls_pki:/pki
+      - db-data:/var/lib/postgresql/data
     restart: on-failure
   temporal:
     container_name: temporal
@@ -114,7 +116,8 @@ networks:
   temporal-network:
     driver: bridge
     name: temporal-network
-
 volumes:
   temporal_tls_pki:
    external: true
+  db-data:
+  es-data:
