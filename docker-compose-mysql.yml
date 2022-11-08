@@ -9,6 +9,8 @@ services:
       - temporal-network
     ports:
       - 3306:3306
+    volumes:
+      - /var/lib/mysql
   temporal:
     container_name: temporal
     depends_on:
