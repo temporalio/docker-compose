@@ -10,7 +10,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - db-data:/var/lib/mysql
+      - /var/lib/mysql
   temporal:
     container_name: temporal
     depends_on:
@@ -58,5 +58,3 @@ networks:
   temporal-network:
     driver: bridge
     name: temporal-network
-volumes:
-  db-data:
