@@ -63,6 +63,7 @@ Here is a list of available files and the dependencies they use.
 | File                               | Description                            |
 |------------------------------------| -------------------------------------- |
 | docker-compose.yml                 | PostgreSQL and Elasticsearch (default) |
+| docker-compose-tls.yml             | PostgreSQL and Elasticsearch with TLS  |
 | docker-compose-postgres.yml        | PostgreSQL                             |
 | docker-compose-cass.yml            | Cassandra                              |
 | docker-compose-cass-es.yml         | Cassandra and Elasticsearch            |
@@ -70,6 +71,18 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-mysql-es.yml        | MySQL and Elasticsearch                |
 | docker-compose-cockroach.yml       | CockroachDB                            |
 | docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
+
+### Using the web interface
+
+`docker-compose.yml ` includes the Temporal Web UI.
+
+If you run command:
+
+```bash
+docker-compose up
+```
+
+You access the Temporal Web UI at `http://localhost:8080`.
 
 ### Enabling metrics (with Grafana and Prometheus)
 

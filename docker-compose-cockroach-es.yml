@@ -15,6 +15,8 @@ services:
     security_opt:
       - no-new-privileges
     tty: false
+    volumes:
+      - /var/lib/cockroach
   elasticsearch:
     container_name: temporal-elasticsearch
     environment:
@@ -30,6 +32,8 @@ services:
       - temporal-network
     ports:
       - 9200:9200
+    volumes:
+      - /var/lib/elasticsearch/data
   temporal:
     container_name: temporal
     depends_on:
