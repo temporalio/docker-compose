@@ -60,21 +60,41 @@ docker-compose -f docker-compose-mysql-es.yml up
 
 Here is a list of available files and the dependencies they use.
 
-| File                               | Description                            |
-|------------------------------------| -------------------------------------- |
-| docker-compose.yml                 | PostgreSQL and Elasticsearch (default) |
-| docker-compose-tls.yml             | PostgreSQL and Elasticsearch with TLS  |
-| docker-compose-postgres.yml        | PostgreSQL                             |
-| docker-compose-cass.yml            | Cassandra                              |
-| docker-compose-cass-es.yml         | Cassandra and Elasticsearch            |
-| docker-compose-mysql.yml           | MySQL                                  |
-| docker-compose-mysql-es.yml        | MySQL and Elasticsearch                |
-| docker-compose-cockroach.yml       | CockroachDB                            |
-| docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch          |
+| File                               | Description                                                   |
+|------------------------------------| ------------------------------------------------------------- |
+| docker-compose.yml                 | PostgreSQL and Elasticsearch (default)                        |
+| docker-compose-tls.yml             | PostgreSQL and Elasticsearch with TLS                         |
+| docker-compose-postgres.yml        | PostgreSQL                                                    |
+| docker-compose-cass.yml            | Cassandra                                                     |
+| docker-compose-cass-es.yml         | Cassandra and Elasticsearch                                   |
+| docker-compose-mysql.yml           | MySQL                                                         |
+| docker-compose-mysql-es.yml        | MySQL and Elasticsearch                                       |
+| docker-compose-cockroach.yml       | CockroachDB                                                   |
+| docker-compose-cockroach-es.yml    | CockroachDB and Elasticsearch                                 |
+| docker-compose-multirole.yml       | PostgreSQL and Elasticsearch with mult-role Server containers |
+
+### Using multi-role configuration
+
+First install the loki plugin (this is one time operation)
+```bash
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+```
+
+Start multi-role Server configuration:
+```
+docker compose -f docker-compose-multirole.yaml up
+```
+
+Some exposed endpoints:
+- http://localhost:8080 - Temporal Web UI
+- http://localhost:8085 - Grafana dashboards
+- http://localhost:9090 - Prometheus UI
+- http://localhost:9090/targets - Prometheus targets
+- http://localhost:8000/metrics - Server metrics
 
 ### Using the web interface
 
-`docker-compose.yml ` includes the Temporal Web UI.
+`docker-compose.yml` includes the Temporal Web UI.
 
 If you run command:
 
@@ -82,7 +102,7 @@ If you run command:
 docker-compose up
 ```
 
-You access the Temporal Web UI at `http://localhost:8080`.
+You access the Temporal Web UI at http://localhost:8080.
 
 ### Enabling metrics (with Grafana and Prometheus)
 
