@@ -1,0 +1,41 @@
+global:
+  scrape_interval: 10s
+scrape_configs:
+  - job_name: 'temporalmetrics'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      # Server metrics target
+      - targets:
+          - 'host.docker.internal:8000'
+          - 'host.docker.internal:8001'
+          - 'host.docker.internal:8002'
+          - 'host.docker.internal:8003'
+          - 'host.docker.internal:8004'
+        labels:
+          group: 'server-metrics'
+
+      # Local app targets (if configured)
+      - targets:
+          - 'host.docker.internal:8077'
+          - 'host.docker.internal:8078'
+        labels:
+          group: 'sdk-metrics'
+      # Docker metrics
+      - targets:
+          - 'host.docker.internal:9323'
+        labels:
+          group: 'docker-metrics'
+      # Postgres Exporter
+      - targets:
+          - 'host.docker.internal:9187'
+        labels:
+          group: 'postgres-metrics'
+  - job_name: 'springbootjavasdk'
+    metrics_path: /actuator/prometheus
+    scheme: http
+    static_configs:
+      - targets:
+          - 'host.docker.internal:3030'
+        labels:
+          group: 'spring-boot-metrics'
