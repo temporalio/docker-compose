@@ -59,7 +59,7 @@ services:
     container_name: temporal-history
     depends_on:
       - elasticsearch
-      - temporal-admin-tools
+      - postgresql
     environment:
       - DB=postgresql
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
@@ -74,8 +74,8 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    # use temporalio/auto-setup to automatically create namespaces
-    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7234
         target: 7234
@@ -106,6 +106,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
     image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7235
@@ -138,7 +139,9 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
-    image: temporalio/server:${TEMPORAL_VERSION}
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    # use temporalio/auto-setup to automatically create namespaces
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
     ports:
       - published: 7237
         target: 7237
@@ -173,6 +176,7 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
     image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7236
@@ -189,8 +193,7 @@ services:
     <<: *loki-logging
     container_name: temporal-worker
     depends_on:
-      - temporal-frontend
-      - temporal-frontend2
+      - temporal-nginx
     environment:
       - DB=postgresql
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
@@ -204,6 +207,7 @@ services:
       - PROMETHEUS_ENDPOINT=0.0.0.0:8003
       # set to nginx
       - PUBLIC_FRONTEND_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
@@ -223,9 +227,9 @@ services:
     <<: *loki-logging
     container_name: temporal-admin-tools
     depends_on:
-      - elasticsearch
+      - temporal-nginx
     environment:
-      - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
     image: temporalio/admin-tools:${TEMPORAL_VERSION}
     stdin_open: true
     tty: true
@@ -235,10 +239,11 @@ services:
   temporal-ui:
     container_name: temporal-ui
     depends_on:
-      - temporal-admin-tools
+      - temporal-nginx
     environment:
       - TEMPORAL_ADDRESS=temporal-nginx:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     ports:
       - 8080:8080
