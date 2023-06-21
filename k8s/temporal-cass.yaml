@@ -245,6 +245,8 @@ items:
         spec:
           containers:
             - env:
+                - name: TEMPORAL_ADDRESS
+                  value: temporal:7233
                 - name: TEMPORAL_CLI_ADDRESS
                   value: temporal:7233
               image: temporalio/admin-tools:1.17.1
