@@ -217,7 +217,7 @@ items:
                   value: elasticsearch
                 - name: ES_VERSION
                   value: v7
-              image: temporalio/auto-setup:1.17.1
+              image: temporalio/auto-setup:1.21.0
               name: temporal
               ports:
                 - containerPort: 7233
@@ -320,9 +320,11 @@ items:
         spec:
           containers:
             - env:
+                - name: TEMPORAL_ADDRESS
+                  value: temporal:7233
                 - name: TEMPORAL_CLI_ADDRESS
                   value: temporal:7233
-              image: temporalio/admin-tools:1.17.1
+              image: temporalio/admin-tools:1.21.0
               name: temporal-admin-tools
               resources: {}
               stdin: true
