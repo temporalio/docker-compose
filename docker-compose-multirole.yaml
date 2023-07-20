@@ -1,0 +1,339 @@
+version: "3.5"
+
+x-logging: &loki-logging
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+      mode: non-blocking
+      max-buffer-size: 4m
+      loki-retries: "3"
+
+services:
+  loki:
+    container_name: loki
+    image: grafana/loki:latest
+    ports:
+      - published: 3100
+        target: 3100
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - type: bind
+        source: ./deployment/loki/local-config.yaml
+        target: /etc/loki/local-config.yaml
+    depends_on:
+      - grafana
+    networks:
+      - temporal-network
+
+  elasticsearch:
+    <<: *loki-logging
+    container_name: temporal-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    image: elasticsearch:${ELASTICSEARCH_VERSION}
+    ports:
+      - published: 9200
+        target: 9200
+    networks:
+      - temporal-network
+
+  postgresql:
+    <<: *loki-logging
+    container_name: temporal-postgresql
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+    image: postgres:${POSTGRESQL_VERSION}
+    expose:
+      - ${POSTGRES_DEFAULT_PORT}
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - temporal-network
+
+  temporal-history:
+    <<: *loki-logging
+    container_name: temporal-history
+    depends_on:
+      - elasticsearch
+      - postgresql
+    environment:
+      - DB=postgresql
+      - DB_PORT=${POSTGRES_DEFAULT_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD}
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - SERVICES=history
+      - PROMETHEUS_ENDPOINT=0.0.0.0:8000
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/server:${TEMPORAL_VERSION}
+    ports:
+      - published: 7234
+        target: 7234
+      - published: 8000
+        target: 8000
+    restart: on-failure
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+
+  temporal-matching:
+    <<: *loki-logging
+    container_name: temporal-matching
+    depends_on:
+      - temporal-history
+    environment:
+      - DB=postgresql
+      - DB_PORT=${POSTGRES_DEFAULT_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD}
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - SERVICES=matching
+      - PROMETHEUS_ENDPOINT=0.0.0.0:8001
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/server:${TEMPORAL_VERSION}
+    ports:
+      - published: 7235
+        target: 7235
+      - published: 8001
+        target: 8001
+    restart: on-failure
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+
+  temporal-frontend:
+    <<: *loki-logging
+    container_name: temporal-frontend
+    depends_on:
+      - temporal-matching
+    environment:
+      - DB=postgresql
+      - DB_PORT=${POSTGRES_DEFAULT_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD}
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - SERVICES=frontend
+      - FRONTEND_GRPC_PORT=7237
+      - PROMETHEUS_ENDPOINT=0.0.0.0:8002
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    # use temporalio/auto-setup to automatically create namespaces
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    ports:
+      - published: 7237
+        target: 7237
+      - published: 8002
+        target: 8002
+    restart: on-failure
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+
+  temporal-frontend2:
+    <<: *loki-logging
+    container_name: temporal-frontend2
+    depends_on:
+      - temporal-matching
+    environment:
+      - DB=postgresql
+      - DB_PORT=${POSTGRES_DEFAULT_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD}
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - SERVICES=frontend
+      # set different frontend grpc port
+      - FRONTEND_GRPC_PORT=7236
+      # set different membership port than temporal-frontend
+      - FRONTEND_MEMBERSHIP_PORT=6936
+      - PROMETHEUS_ENDPOINT=0.0.0.0:8004
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/server:${TEMPORAL_VERSION}
+    ports:
+      - published: 7236
+        target: 7236
+      - published: 8004
+        target: 8004
+    restart: on-failure
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+
+  temporal-worker:
+    <<: *loki-logging
+    container_name: temporal-worker
+    depends_on:
+      - temporal-nginx
+    environment:
+      - DB=postgresql
+      - DB_PORT=${POSTGRES_DEFAULT_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PWD=${POSTGRES_PASSWORD}
+      - POSTGRES_SEEDS=postgresql
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+      - TEMPORAL_HISTORY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - TEMPORAL_VISIBILITY_NAMESPACEDEFAULT_ARCHIVAL_FILESTORE=enabled
+      - SERVICES=worker
+      - PROMETHEUS_ENDPOINT=0.0.0.0:8003
+      # set to nginx
+      - PUBLIC_FRONTEND_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - ENABLE_ES=true
+      - ES_SEEDS=elasticsearch
+      - ES_VERSION=v7
+    image: temporalio/server:${TEMPORAL_VERSION}
+    ports:
+      - published: 7232
+        target: 7232
+      - published: 8003
+        target: 8003
+    restart: on-failure
+    volumes:
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+    networks:
+      - temporal-network
+  
+  temporal-admin-tools:
+    <<: *loki-logging
+    container_name: temporal-admin-tools
+    depends_on:
+      - temporal-nginx
+    environment:
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/admin-tools:${TEMPORAL_VERSION}
+    stdin_open: true
+    tty: true
+    networks:
+      - temporal-network
+
+  temporal-ui:
+    container_name: temporal-ui
+    depends_on:
+      - temporal-nginx
+    environment:
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+    image: temporalio/ui:${TEMPORAL_UI_VERSION}
+    ports:
+      - 8080:8080
+    networks:
+      - temporal-network
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.37.0
+    ports:
+      - published: 9090
+        target: 9090
+    volumes:
+      - type: bind
+        source: ./deployment/prometheus/config.yml
+        target: /etc/prometheus/prometheus.yml
+    depends_on:
+      - temporal-worker
+    networks:
+      - temporal-network
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:7.5.16
+    build: './deployment/grafana'
+    environment:
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    ports:
+      - published: 8085
+        target: 3000
+    volumes:
+      - type: bind
+        source: ./deployment/grafana/provisioning/datasources
+        target: /etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    networks:
+      - temporal-network
+
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:1.37
+    ports:
+      - published: 16686
+        target: 16686
+      - published: 14268
+        target: 14268
+      - published: 14250
+        target: 14250
+    networks:
+      - temporal-network
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.47.0
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - type: bind
+        source: ./deployment/otel/otel-config.yaml
+        target: /etc/otel-collector-config.yaml
+    ports:
+      - published: 1888
+        target: 1888
+      - published: 13133
+        target: 13133
+      - published: 4317
+        target: 4317
+      - published: 55670
+        target: 55670
+    depends_on:
+      - jaeger-all-in-one
+    networks:
+      - temporal-network
+
+  temporal-nginx:
+    <<: *loki-logging
+    image: nginx:1.22.1
+    container_name: temporal-nginx
+    restart: unless-stopped
+    depends_on:
+      - temporal-frontend
+      - temporal-frontend2
+    ports:
+      - 7233:7233
+    volumes:
+      - ./deployment/nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - temporal-network
+
+networks:
+  temporal-network:
+    driver: bridge
+    name: temporal-network
