@@ -75,7 +75,9 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
-    image: temporalio/server:${TEMPORAL_VERSION}
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
+    # use temporalio/auto-setup to automatically setup DB schema and namespaces
+    image: temporalio/auto-setup:${TEMPORAL_VERSION}
     ports:
       - published: 7234
         target: 7234
@@ -107,6 +109,7 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
     image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7235
@@ -140,8 +143,8 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
-    # use temporalio/auto-setup to automatically create namespaces
-    image: temporalio/auto-setup:${TEMPORAL_VERSION}
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
+    image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7237
         target: 7237
@@ -177,6 +180,7 @@ services:
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
     image: temporalio/server:${TEMPORAL_VERSION}
     ports:
       - published: 7236
@@ -208,6 +212,7 @@ services:
       # set to nginx
       - PUBLIC_FRONTEND_ADDRESS=temporal-nginx:7233
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
@@ -230,6 +235,7 @@ services:
       - temporal-nginx
     environment:
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
     image: temporalio/admin-tools:${TEMPORAL_VERSION}
     stdin_open: true
     tty: true
@@ -241,9 +247,9 @@ services:
     depends_on:
       - temporal-nginx
     environment:
-      - TEMPORAL_ADDRESS=temporal-nginx:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
       - TEMPORAL_CLI_ADDRESS=temporal-nginx:7233
+      - TEMPORAL_ADDRESS=temporal-nginx:7233
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     ports:
       - 8080:8080
