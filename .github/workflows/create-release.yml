@@ -78,7 +78,6 @@ jobs:
           echo "RELEASE_URL=$RELEASE_URL" >> "$GITHUB_OUTPUT"
 
       - name: Create summary
-        if: ${{ github.event.inputs.release_notes }}
         run: |
           TEMPFILE=$(mktemp)
           cat > $TEMPFILE <<- EOF
