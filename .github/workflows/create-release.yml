@@ -1,0 +1,89 @@
+name: "Create a release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag for new version (1.23.4)"
+        required: true
+
+jobs:
+  create-tag:
+    name: "Create a release"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
+          private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          token: ${{ steps.generate_token.outputs.token }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set up Github credentials
+        run: |
+          git config --local user.name 'Temporal Data'
+          git config --local user.email 'commander-data@temporal.io'
+
+      - name: Update images version
+        env:
+          TAG: ${{ github.event.inputs.tag }}
+        run: |
+          find ./k8s -iname "*.yaml" -exec sed -i -E -e "s#temporalio/(auto-setup|admin-tools):[^ ]+#temporalio/\1:$TAG#g" {} \;
+          sed -i -e "s/^TEMPORAL_VERSION=.*$/TEMPORAL_VERSION=$TAG/g" .env
+          if [ -n "$(git diff --stat)" ]; then
+            git add .
+            git commit -m "Bump Server version to $TAG"
+            git push origin main
+          fi
+
+      - name: Create and push tag
+        env:
+          TAG: 'v${{ github.event.inputs.tag }}'
+        run: |
+          if [ -z "$(git tag -l $TAG)" ]; then
+            git tag "$TAG"
+            git push origin "$TAG"
+          elif [ "$(git rev-list -n 1 $TAG)" != "$(git rev-parse HEAD)" ]; then
+            echo "::error::Tag already exists and it doesn't reference current HEAD of main branch"
+            exit 1
+          fi
+
+      - name: Create draft release notes
+        id: release_notes
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          TAG: 'v${{ github.event.inputs.tag}}'
+        run: |
+          TEMPFILE=$(mktemp)
+          cat > $TEMPFILE <<- EOF
+          # Release Highlights
+          Please check [main repo](https://github.com/temporalio/temporal/releases/tag/${TAG}) release notes.
+          EOF
+
+          gh repo set-default ${{ github.repository }}
+          RELEASE_URL=$(gh release create "$TAG" --verify-tag --draft --title "$TAG" -F $TEMPFILE)
+          echo "RELEASE_URL=$RELEASE_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Create summary
+        if: ${{ github.event.inputs.release_notes }}
+        run: |
+          TEMPFILE=$(mktemp)
+          cat > $TEMPFILE <<- EOF
+          # Job summary
+          Draft release: ${{ steps.release_notes.outputs.RELEASE_URL }}
+          EOF
+
+          cat $TEMPFILE >> $GITHUB_STEP_SUMMARY
