@@ -41,7 +41,6 @@ jobs:
         env:
           TAG: ${{ github.event.inputs.tag }}
         run: |
-          find ./k8s -iname "*.yaml" -exec sed -i -E -e "s#temporalio/(auto-setup|admin-tools):[^ ]+#temporalio/\1:$TAG#g" {} \;
           sed -i -e "s/^TEMPORAL_VERSION=.*$/TEMPORAL_VERSION=$TAG/g" .env
           if [ -n "$(git diff --stat)" ]; then
             git add .
