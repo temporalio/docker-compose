@@ -52,7 +52,7 @@ services:
     labels:
       kompose.volume.type: configMap
     volumes:
-      - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+      - ./dynamicconfig:/etc/temporal/config/dynamicconfig:Z
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
