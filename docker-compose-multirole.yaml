@@ -61,7 +61,7 @@ services:
       - elasticsearch
       - postgresql
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
