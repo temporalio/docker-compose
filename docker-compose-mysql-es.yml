@@ -34,7 +34,7 @@ services:
       - mysql
       - elasticsearch
     environment:
-      - DB=mysql
+      - DB=mysql8
       - MYSQL_USER=root
       - MYSQL_PWD=root
       - MYSQL_SEEDS=mysql

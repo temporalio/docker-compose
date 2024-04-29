@@ -40,7 +40,7 @@ services:
       - cockroach
       - elasticsearch
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=26257
       - POSTGRES_USER=root
       - POSTGRES_PWD=
