@@ -6,6 +6,9 @@ on:
       tag:
         description: "Tag for new version (1.23.4)"
         required: true
+      admintools_tag:
+        description: "Admin tools version (1.23.4-tctl-1.0-cli-1.0)"
+        required: true
 
 jobs:
   create-tag:
@@ -40,8 +43,10 @@ jobs:
       - name: Update images version
         env:
           TAG: ${{ github.event.inputs.tag }}
+          ADMINTOOLS_TAG: ${{ github.event.inputs.admintools_tag }}
         run: |
           sed -i -e "s/^TEMPORAL_VERSION=.*$/TEMPORAL_VERSION=$TAG/g" .env
+          sed -i -e "s/^TEMPORAL_ADMINTOOLS_VERSION=.*$/TEMPORAL_ADMINTOOLS_VERSION=$ADMINTOOLS_TAG/g" .env
           if [ -n "$(git diff --stat)" ]; then
             git add .
             git commit -m "Bump Server version to $TAG"
