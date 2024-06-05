@@ -49,8 +49,6 @@ services:
       - temporal-network
     ports:
       - 7233:7233
-    labels:
-      kompose.volume.type: configMap
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
   temporal-admin-tools:
