@@ -67,8 +67,6 @@ Here is a list of available files and the dependencies they use.
 | docker-compose-cass-es.yml             | Cassandra and Elasticsearch                                   |
 | docker-compose-mysql.yml               | MySQL                                                         |
 | docker-compose-mysql-es.yml            | MySQL and Elasticsearch                                       |
-| docker-compose-cockroach.yml           | CockroachDB                                                   |
-| docker-compose-cockroach-es.yml        | CockroachDB and Elasticsearch                                 |
 | docker-compose-postgres-opensearch.yml | PostgreSQL and OpenSearch                                     |
 | docker-compose-multirole.yml           | PostgreSQL and Elasticsearch with mult-role Server containers |
 
