@@ -95,7 +95,7 @@ services:
     depends_on:
       - temporal-history
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
@@ -128,7 +128,7 @@ services:
     depends_on:
       - temporal-matching
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
@@ -162,7 +162,7 @@ services:
     depends_on:
       - temporal-matching
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
@@ -199,7 +199,7 @@ services:
     depends_on:
       - temporal-nginx
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - DB_PORT=${POSTGRES_DEFAULT_PORT}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PWD=${POSTGRES_PASSWORD}
