@@ -60,7 +60,7 @@ Here is a list of available files and the dependencies they use.
 
 | File                                   | Description                                                   |
 |----------------------------------------|---------------------------------------------------------------|
-| docker-compose.yml                     | PostgreSQL and Elasticsearch (default)                        |
+| docker-compose-postgres-es.yml         | PostgreSQL and Elasticsearch (default)                        |
 | docker-compose-tls.yml                 | PostgreSQL and Elasticsearch with TLS                         |
 | docker-compose-postgres.yml            | PostgreSQL                                                    |
 | docker-compose-cass.yml                | Cassandra                                                     |
