@@ -12,8 +12,7 @@ services:
       - xpack.security.enabled=false
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
-      #  - temporal-network
-      - service-bridge
+      - temporal-network
     expose:
       - 9200
     volumes:
@@ -25,8 +24,7 @@ services:
       POSTGRES_USER: temporal
     image: postgres:${POSTGRESQL_VERSION}
     networks:
-      # - temporal-network
-      - service-bridge
+      - temporal-network
     expose:
       - 5432
     volumes:
@@ -48,8 +46,7 @@ services:
       - ES_VERSION=v7
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
-      # - temporal-network
-      - service-bridge
+      - temporal-network
     ports:
       - 7233:7233
     volumes:
@@ -63,8 +60,7 @@ services:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
     networks:
-      # - temporal-network
-      - service-bridge
+      - temporal-network
     stdin_open: true
     tty: true
   temporal-ui:
@@ -76,13 +72,31 @@ services:
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
-      # - temporal-network
-      - service-bridge
+      - temporal-network
     ports:
       - 8080:8080
+  worker:
+    build:
+      context: ..
+      dockerfile: Dockerfile.worker
+
+    environment:
+      - TEMPORAL_HOST=temporal
+      - TEMPORAL_PORT=7233
+    networks:
+      - temporal-network
+
+  workflow:
+    build:
+      context: ..
+      dockerfile: Dockerfile.workflow
+
+    environment:
+      - TEMPORAL_HOST=temporal
+      - TEMPORAL_PORT=7233
+    networks:
+      - temporal-network
 networks:
-  # temporal-network:
-  #   driver: bridge
-  #   name: temporal-network
-  service-bridge:
-    external: true
+  temporal-network:
+    driver: bridge
+    name: temporal-network
