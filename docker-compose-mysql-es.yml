@@ -42,6 +42,8 @@ services:
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
       - ES_VERSION=v7
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
       - temporal-network
