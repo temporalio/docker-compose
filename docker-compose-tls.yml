@@ -76,6 +76,8 @@ services:
       - ES_SCHEME=https
       - ES_USER=elastic
       - ES_PWD=elastic
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_CLI_ADDRESS=temporal:7233
     networks:
       - temporal-network
     ports:
