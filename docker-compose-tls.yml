@@ -96,8 +96,8 @@ services:
       context: .
       dockerfile: tls/Dockerfile.admin-tools-tls
       args:
-        - BASEIMAGE=admin-tools:${TEMPORAL_VERSION}
-    image: temporalio/admin-tools-tls:${TEMPORAL_VERSION}
+        - BASEIMAGE=admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
+    image: temporalio/admin-tools-tls:${TEMPORAL_ADMINTOOLS_VERSION}
     networks:
       - temporal-network
     stdin_open: true
