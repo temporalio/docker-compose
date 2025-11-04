@@ -273,7 +273,7 @@ services:
 
   grafana:
     container_name: grafana
-    image: grafana/grafana:7.5.16
+    image: grafana/grafana:12.2.1
     build: './deployment/grafana'
     environment:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
@@ -286,6 +286,12 @@ services:
       - type: bind
         source: ./deployment/grafana/provisioning/datasources
         target: /etc/grafana/provisioning/datasources
+      - type: bind
+        source: ./temporalio/deployment/grafana/provisioning/dashboards
+        target: /etc/grafana/provisioning/dashboards
+      - type: bind
+        source: ./temporalio/deployment/grafana/dashboards
+        target: /var/lib/grafana/dashboards
     depends_on:
       - prometheus
     networks:

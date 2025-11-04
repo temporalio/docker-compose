@@ -7,11 +7,11 @@ scrape_configs:
     static_configs:
       # Server metrics target
       - targets:
-          - 'host.docker.internal:8000'
-          - 'host.docker.internal:8001'
-          - 'host.docker.internal:8002'
-          - 'host.docker.internal:8003'
-          - 'host.docker.internal:8004'
+          - 'temporal-history:8000'
+          - 'temporal-matching:8001'
+          - 'temporal-frontend:8002'
+          - 'temporal-worker:8003'
+          - 'temporal-frontend2:8004'
         labels:
           group: 'server-metrics'
 
