@@ -1,5 +1,5 @@
 # Temporal Server docker-compose files
-
+[!WARNING]
 > **⚠️ ARCHIVED**: This repository has been archived. All docker-compose examples have been moved to the [samples-server](https://github.com/temporalio/samples-server/tree/main/compose) repository. Please use that repository for the latest docker-compose configurations.
 
 This repository provides docker-compose files that enable you to run a local instance of the Temporal Server.
