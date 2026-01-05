@@ -20,38 +20,26 @@ ingester:
 schema_config:
   configs:
     - from: 2022-11-20
-      store: boltdb
+      store: tsdb
       object_store: filesystem
-      schema: v9
+      schema: v13
       index:
         prefix: index_
-        period: 168h
+        period: 24h
 
 storage_config:
-  boltdb:
-    directory: /tmp/loki/index
-
   filesystem:
     directory: /tmp/loki/chunks
 
+tsdb_shipper:
+  active_index_directory: /tmp/loki/index
+  cache_location: /tmp/loki/index_cache
+  cache_ttl: 24h
+
 limits_config:
-  enforce_metric_name: false
   reject_old_samples: true
   reject_old_samples_max_age: 168h
 
-chunk_store_config:
-  max_look_back_period: 0
-
-table_manager:
-  chunk_tables_provisioning:
-    inactive_read_throughput: 0
-    inactive_write_throughput: 0
-    provisioned_read_throughput: 0
-    provisioned_write_throughput: 0
-  index_tables_provisioning:
-    inactive_read_throughput: 0
-    inactive_write_throughput: 0
-    provisioned_read_throughput: 0
-    provisioned_write_throughput: 0
-  retention_deletes_enabled: false
-  retention_period: 0
+compactor:
+  working_directory: /tmp/loki/compactor
+  compaction_interval: 10m
