@@ -12,6 +12,7 @@ services:
       - 5432:5432
     volumes:
       - /var/lib/postgresql/data
+
   temporal:
     container_name: temporal
     depends_on:
@@ -26,12 +27,14 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
+    entrypoint: ["tini", "--", "/auto-setup.sh"]  # <-- FIX
     networks:
       - temporal-network
     ports:
       - 7233:7233
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
+
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
@@ -44,6 +47,7 @@ services:
       - temporal-network
     stdin_open: true
     tty: true
+
   temporal-ui:
     container_name: temporal-ui
     depends_on:
@@ -56,6 +60,7 @@ services:
       - temporal-network
     ports:
       - 8080:8080
+
 networks:
   temporal-network:
     driver: bridge
